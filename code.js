@@ -165,19 +165,24 @@ const hexToRgb = (hex) => {
     };
 
     log('Rendering color samples...');
-    const colorRow = figma.createFrame();
-    colorRow.layoutMode = 'HORIZONTAL';
-    colorRow.counterAxisSizingMode = 'AUTO';
-    colorRow.primaryAxisSizingMode = 'AUTO';
-    colorRow.itemSpacing = 16;
+    const colorFrame = figma.createFrame();
+    colorFrame.name = 'Color Samples';
+    colorFrame.layoutMode = 'HORIZONTAL';
+    colorFrame.counterAxisSizingMode = 'AUTO';
+    colorFrame.primaryAxisSizingMode = 'AUTO';
+    colorFrame.itemSpacing = 16;
+    colorFrame.paddingLeft = 16;
+    colorFrame.paddingRight = 16;
+    colorFrame.paddingTop = 16;
+    colorFrame.paddingBottom = 16;
 
     for (const [name] of Object.entries(colors)) {
       const variable = variableMap[`color/${name}`];
       const preview = createColorPreview(name, variable);
-      colorRow.appendChild(preview);
+      colorFrame.appendChild(preview);
     }
 
-    previewFrame.appendChild(colorRow);
+    previewFrame.appendChild(colorFrame);
 
     const createTypographyPreview = (name, sizeVariable, weightVariable) => {
       const frame = figma.createFrame();
@@ -209,11 +214,16 @@ const hexToRgb = (hex) => {
     };
 
     log('Rendering typography samples...');
-    const typeColumn = figma.createFrame();
-    typeColumn.layoutMode = 'VERTICAL';
-    typeColumn.counterAxisSizingMode = 'AUTO';
-    typeColumn.primaryAxisSizingMode = 'AUTO';
-    typeColumn.itemSpacing = 16;
+    const typeFrame = figma.createFrame();
+    typeFrame.name = 'Typography Samples';
+    typeFrame.layoutMode = 'VERTICAL';
+    typeFrame.counterAxisSizingMode = 'AUTO';
+    typeFrame.primaryAxisSizingMode = 'AUTO';
+    typeFrame.itemSpacing = 16;
+    typeFrame.paddingLeft = 16;
+    typeFrame.paddingRight = 16;
+    typeFrame.paddingTop = 16;
+    typeFrame.paddingBottom = 16;
 
     const typeOrder = ['display', 'heading', 'body'];
     for (const name of typeOrder) {
@@ -224,10 +234,10 @@ const hexToRgb = (hex) => {
         sizeVariable,
         weightVariable
       );
-      typeColumn.appendChild(preview);
+      typeFrame.appendChild(preview);
     }
 
-    previewFrame.appendChild(typeColumn);
+    previewFrame.appendChild(typeFrame);
 
     log('Design system setup complete.');
     figma.closePlugin('Done.');
