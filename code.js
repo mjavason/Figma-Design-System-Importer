@@ -131,10 +131,10 @@ const hexToRgb = (hex) => {
     };
 
     const typography = {
-      display: { fontSize: 48, fontWeight: 700, lineHeight: 60 },
-      heading: { fontSize: 32, fontWeight: 600, lineHeight: 40 },
-      body: { fontSize: 16, fontWeight: 400, lineHeight: 24 },
-      caption: { fontSize: 12, fontWeight: 500, lineHeight: 18 },
+      display: { fontSize: 48, fontWeight: 700, lineHeight: 60, style: 'Bold' },
+      heading: { fontSize: 32, fontWeight: 600, lineHeight: 40, style: 'Medium' },
+      body: { fontSize: 16, fontWeight: 400, lineHeight: 24, style: 'Regular' },
+      caption: { fontSize: 12, fontWeight: 500, lineHeight: 18, style: 'Medium' },
     };
 
     const variableMap = {};
@@ -208,6 +208,27 @@ const hexToRgb = (hex) => {
       variableMap[`type/${key}/lineHeight`] = lineHeight;
     }
 
+    log('Creating text styles...');
+    for (const [key, val] of Object.entries(typography)) {
+      try {
+        const textStyle = figma.createTextStyle();
+        textStyle.name = key.charAt(0).toUpperCase() + key.slice(1);
+        
+        // Load the font first
+        await figma.loadFontAsync({ family: 'Roboto', style: val.style });
+        
+        // Set properties individually to avoid frozen object issues
+        textStyle.fontName = { family: 'Roboto', style: val.style };
+        textStyle.fontSize = val.fontSize;
+        textStyle.lineHeight = { value: val.lineHeight, unit: 'PIXELS' };
+        textStyle.fills = [{ type: 'SOLID', color: { r: 0.1, g: 0.1, b: 0.1 } }];
+        
+        log(`Created text style: ${textStyle.name}`);
+      } catch (styleError) {
+        log(`Failed to create text style for ${key}: ${styleError.message}`);
+      }
+    }
+
     log('Creating main container...');
     const mainFrame = figma.createFrame();
     mainFrame.name = 'Design System';
@@ -244,9 +265,9 @@ const hexToRgb = (hex) => {
     typeTitle.fontSize = 20;
     typographyFrame.appendChild(typeTitle);
 
-    const createTypographySection = (title, sizes) => {
+    const createTypographyExample = async (typeKey, typeName) => {
       const section = figma.createFrame();
-      section.name = title;
+      section.name = typeName;
       section.layoutMode = 'VERTICAL';
       section.counterAxisSizingMode = 'AUTO';
       section.primaryAxisSizingMode = 'AUTO';
@@ -255,7 +276,7 @@ const hexToRgb = (hex) => {
 
       const sectionTitle = figma.createText();
       sectionTitle.fontName = { family: 'Roboto', style: 'Medium' };
-      sectionTitle.characters = title;
+      sectionTitle.characters = typeName;
       sectionTitle.fontSize = 14;
       const grayVariable = variableMap['color/black/400'];
       if (grayVariable) {
@@ -278,20 +299,16 @@ const hexToRgb = (hex) => {
       }
       section.appendChild(sectionTitle);
 
-      for (const size of sizes) {
+      try {
         const text = figma.createText();
-        text.fontName = {
-          family: 'Roboto',
-          style:
-            size === 'Display'
-              ? 'Bold'
-              : size === 'Heading'
-              ? 'Medium'
-              : 'Regular',
-        };
-        text.characters = 'This is the font to use';
+        const typeConfig = typography[typeKey];
+        
+        // Load font before setting fontName
+        await figma.loadFontAsync({ family: 'Roboto', style: typeConfig.style });
+        
+        text.fontName = { family: 'Roboto', style: typeConfig.style };
+        text.characters = 'The quick brown fox jumps over the lazy dog';
 
-        const typeKey = size.toLowerCase();
         const sizeVariable = variableMap[`type/${typeKey}/size`];
         const lineHeightVariable = variableMap[`type/${typeKey}/lineHeight`];
         const textColorVariable = variableMap['color/black/800'];
@@ -299,18 +316,13 @@ const hexToRgb = (hex) => {
         if (sizeVariable) {
           text.setBoundVariable('fontSize', sizeVariable);
         } else {
-          text.fontSize =
-            size === 'Display'
-              ? 32
-              : size === 'Heading'
-              ? 24
-              : size === 'Body'
-              ? 16
-              : 14;
+          text.fontSize = typeConfig.fontSize;
         }
 
         if (lineHeightVariable) {
           text.setBoundVariable('lineHeight', lineHeightVariable);
+        } else {
+          text.lineHeight = { value: typeConfig.lineHeight, unit: 'PIXELS' };
         }
 
         if (textColorVariable) {
@@ -331,15 +343,16 @@ const hexToRgb = (hex) => {
         }
 
         section.appendChild(text);
+      } catch (textError) {
+        log(`Failed to create text for ${typeName}: ${textError.message}`);
       }
-
       return section;
     };
 
-    const displaySection = createTypographySection('Display', ['Display']);
-    const headingSection = createTypographySection('Heading', ['Heading']);
-    const bodySection = createTypographySection('Body', ['Body']);
-    const captionSection = createTypographySection('Caption', ['Caption']);
+    const displaySection = await createTypographyExample('display', 'Display');
+    const headingSection = await createTypographyExample('heading', 'Heading');
+    const bodySection = await createTypographyExample('body', 'Body');
+    const captionSection = await createTypographyExample('caption', 'Caption');
 
     typographyFrame.appendChild(displaySection);
     typographyFrame.appendChild(headingSection);
