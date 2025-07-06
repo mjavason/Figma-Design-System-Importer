@@ -44,29 +44,97 @@ const hexToRgb = (hex) => {
     figma.getLocalGridStyles().forEach((s) => s.remove());
 
     log('Loading fonts...');
-    await figma.loadFontAsync({ family: 'Inter', style: 'Regular' });
-    await figma.loadFontAsync({ family: 'Inter', style: 'Bold' });
+    await figma.loadFontAsync({ family: 'Roboto', style: 'Regular' });
+    await figma.loadFontAsync({ family: 'Roboto', style: 'Medium' });
+    await figma.loadFontAsync({ family: 'Roboto', style: 'Bold' });
 
     const colors = {
-      primary: '#1E3A8A',
-      'primary-light': '#3B82F6',
-      accent: '#F59E0B',
-      neutral: '#111827',
       white: '#FFFFFF',
+      brand: {
+        25: '#F5F8FF',
+        50: '#EBF2FF',
+        100: '#D1E0FF',
+        200: '#B3CCFF',
+        300: '#84ADFF',
+        400: '#528BFF',
+        500: '#2563EB',
+        600: '#1D4ED8',
+        700: '#1E40AF',
+        800: '#1E3A8A',
+        900: '#1E3A8A',
+      },
+      supplementary: {
+        25: '#F0FDFF',
+        50: '#ECFEFF',
+        100: '#CFFAFE',
+        200: '#A5F3FC',
+        300: '#67E8F9',
+        400: '#22D3EE',
+        500: '#06B6D4',
+        600: '#0891B2',
+        700: '#0E7490',
+        800: '#155E75',
+        900: '#164E63',
+      },
+      black: {
+        25: '#FCFCFD',
+        50: '#F9FAFB',
+        100: '#F2F4F7',
+        200: '#E4E7EC',
+        300: '#D0D5DD',
+        400: '#98A2B3',
+        500: '#667085',
+        600: '#475467',
+        700: '#344054',
+        800: '#1D2939',
+        900: '#101828',
+      },
+      warning: {
+        25: '#FFFCF5',
+        50: '#FFFAEB',
+        100: '#FEF0C7',
+        200: '#FEDF89',
+        300: '#FEC84B',
+        400: '#FDB022',
+        500: '#F79009',
+        600: '#DC6803',
+        700: '#B54708',
+        800: '#93370D',
+        900: '#7A2E0E',
+      },
+      success: {
+        25: '#F6FEF9',
+        50: '#ECFDF3',
+        100: '#D1FADF',
+        200: '#A6F4C5',
+        300: '#6CE9A6',
+        400: '#32D583',
+        500: '#12B76A',
+        600: '#039855',
+        700: '#027A48',
+        800: '#05603A',
+        900: '#054F31',
+      },
+      error: {
+        25: '#FFFBFA',
+        50: '#FEF3F2',
+        100: '#FEE4E2',
+        200: '#FECDCA',
+        300: '#FDA29B',
+        400: '#F97066',
+        500: '#F04438',
+        600: '#D92D20',
+        700: '#B42318',
+        800: '#912018',
+        900: '#7A271A',
+      },
     };
 
     const typography = {
-      display: { fontSize: 48, fontWeight: 700 },
-      heading: { fontSize: 32, fontWeight: 600 },
-      body: { fontSize: 16, fontWeight: 400 },
-    };
-
-    const spacing = {
-      xs: 4,
-      sm: 8,
-      md: 16,
-      lg: 24,
-      xl: 32,
+      display: { fontSize: 48, fontWeight: 700, lineHeight: 60 },
+      heading: { fontSize: 32, fontWeight: 600, lineHeight: 40 },
+      body: { fontSize: 16, fontWeight: 400, lineHeight: 24 },
+      caption: { fontSize: 12, fontWeight: 500, lineHeight: 18 },
     };
 
     const variableMap = {};
@@ -75,24 +143,44 @@ const hexToRgb = (hex) => {
       return figma.variables.createVariableCollection(name);
     };
 
-    const createVariables = (collection, namespace, vars, type) => {
-      for (const [key, value] of Object.entries(vars)) {
+    const createColorVariables = (collection, namespace, colors) => {
+      if (typeof colors === 'string') {
         const variable = figma.variables.createVariable(
-          `${namespace}/${key}`,
+          `${namespace}`,
           collection,
-          type
+          'COLOR'
         );
-        const val = type === 'COLOR' ? hexToRgb(value) : value;
-        variable.setValueForMode(collection.modes[0].modeId, val);
-        variableMap[`${namespace}/${key}`] = variable;
+        variable.setValueForMode(collection.modes[0].modeId, hexToRgb(colors));
+        variableMap[namespace] = variable;
+      } else {
+        for (const [key, value] of Object.entries(colors)) {
+          const fullKey = `${namespace}/${key}`;
+          const variable = figma.variables.createVariable(
+            fullKey,
+            collection,
+            'COLOR'
+          );
+          variable.setValueForMode(collection.modes[0].modeId, hexToRgb(value));
+          variableMap[fullKey] = variable;
+        }
       }
     };
 
     log('Creating variable collections...');
-    const colorCollection = createVariableCollection('Color Variables');
-    createVariables(colorCollection, 'color', colors, 'COLOR');
+    const colorCollection = createVariableCollection('Colors');
+    createColorVariables(colorCollection, 'color/white', colors.white);
+    createColorVariables(colorCollection, 'color/brand', colors.brand);
+    createColorVariables(
+      colorCollection,
+      'color/supplementary',
+      colors.supplementary
+    );
+    createColorVariables(colorCollection, 'color/black', colors.black);
+    createColorVariables(colorCollection, 'color/warning', colors.warning);
+    createColorVariables(colorCollection, 'color/success', colors.success);
+    createColorVariables(colorCollection, 'color/error', colors.error);
 
-    const typeCollection = createVariableCollection('Typography Variables');
+    const typeCollection = createVariableCollection('Typography');
     for (const [key, val] of Object.entries(typography)) {
       const size = figma.variables.createVariable(
         `type/${key}/size`,
@@ -104,149 +192,216 @@ const hexToRgb = (hex) => {
         typeCollection,
         'FLOAT'
       );
+      const lineHeight = figma.variables.createVariable(
+        `type/${key}/lineHeight`,
+        typeCollection,
+        'FLOAT'
+      );
       size.setValueForMode(typeCollection.modes[0].modeId, val.fontSize);
       weight.setValueForMode(typeCollection.modes[0].modeId, val.fontWeight);
+      lineHeight.setValueForMode(
+        typeCollection.modes[0].modeId,
+        val.lineHeight
+      );
       variableMap[`type/${key}/size`] = size;
       variableMap[`type/${key}/weight`] = weight;
+      variableMap[`type/${key}/lineHeight`] = lineHeight;
     }
 
-    const spacingCollection = createVariableCollection('Spacing Variables');
-    createVariables(spacingCollection, 'space', spacing, 'FLOAT');
-
-    log('Generating main container frame...');
+    log('Creating main container...');
     const mainFrame = figma.createFrame();
-    mainFrame.name = 'Design System Preview';
+    mainFrame.name = 'Design System';
     mainFrame.layoutMode = 'HORIZONTAL';
     mainFrame.counterAxisSizingMode = 'AUTO';
     mainFrame.primaryAxisSizingMode = 'AUTO';
-    mainFrame.itemSpacing = 32;
-    mainFrame.paddingTop = 32;
-    mainFrame.paddingBottom = 32;
-    mainFrame.paddingLeft = 32;
-    mainFrame.paddingRight = 32;
+    mainFrame.itemSpacing = 40;
+    mainFrame.paddingTop = 40;
+    mainFrame.paddingBottom = 40;
+    mainFrame.paddingLeft = 40;
+    mainFrame.paddingRight = 40;
     mainFrame.x = 0;
     mainFrame.y = 0;
     mainFrame.fills = [];
     dsPage.appendChild(mainFrame);
 
-    log('Generating color preview frame...');
-    const colorPreviewFrame = figma.createFrame();
-    colorPreviewFrame.name = 'Color Preview';
-    colorPreviewFrame.layoutMode = 'VERTICAL';
-    colorPreviewFrame.counterAxisSizingMode = 'AUTO';
-    colorPreviewFrame.primaryAxisSizingMode = 'AUTO';
-    colorPreviewFrame.paddingTop = 24;
-    colorPreviewFrame.paddingBottom = 24;
-    colorPreviewFrame.paddingLeft = 24;
-    colorPreviewFrame.paddingRight = 24;
-    colorPreviewFrame.itemSpacing = 16;
-    mainFrame.appendChild(colorPreviewFrame);
+    log('Creating typography section...');
+    const typographyFrame = figma.createFrame();
+    typographyFrame.name = 'Typography';
+    typographyFrame.layoutMode = 'VERTICAL';
+    typographyFrame.counterAxisSizingMode = 'AUTO';
+    typographyFrame.primaryAxisSizingMode = 'AUTO';
+    typographyFrame.itemSpacing = 24;
+    typographyFrame.paddingTop = 24;
+    typographyFrame.paddingBottom = 24;
+    typographyFrame.paddingLeft = 24;
+    typographyFrame.paddingRight = 24;
+    typographyFrame.fills = [{ type: 'SOLID', color: { r: 1, g: 1, b: 1 } }];
+    typographyFrame.cornerRadius = 8;
 
-    log('Generating typography preview frame...');
-    const typePreviewFrame = figma.createFrame();
-    typePreviewFrame.name = 'Typography Preview';
-    typePreviewFrame.layoutMode = 'VERTICAL';
-    typePreviewFrame.counterAxisSizingMode = 'AUTO';
-    typePreviewFrame.primaryAxisSizingMode = 'AUTO';
-    typePreviewFrame.paddingTop = 24;
-    typePreviewFrame.paddingBottom = 24;
-    typePreviewFrame.paddingLeft = 24;
-    typePreviewFrame.paddingRight = 24;
-    typePreviewFrame.itemSpacing = 16;
-    mainFrame.appendChild(typePreviewFrame);
+    const typeTitle = figma.createText();
+    typeTitle.fontName = { family: 'Roboto', style: 'Medium' };
+    typeTitle.characters = 'Typography';
+    typeTitle.fontSize = 20;
+    typographyFrame.appendChild(typeTitle);
 
-    const createColorPreview = (name, variable) => {
-      const frame = figma.createFrame();
-      frame.layoutMode = 'VERTICAL';
-      frame.counterAxisSizingMode = 'AUTO';
-      frame.primaryAxisSizingMode = 'AUTO';
-      frame.itemSpacing = 4;
-      frame.paddingLeft = 0;
-      frame.paddingRight = 0;
-      frame.paddingTop = 0;
-      frame.paddingBottom = 0;
-      frame.name = name;
+    const createTypographySection = (title, sizes) => {
+      const section = figma.createFrame();
+      section.name = title;
+      section.layoutMode = 'VERTICAL';
+      section.counterAxisSizingMode = 'AUTO';
+      section.primaryAxisSizingMode = 'AUTO';
+      section.itemSpacing = 8;
+      section.fills = [];
 
-      const rect = figma.createRectangle();
-      rect.resize(120, 80);
-      rect.name = `${name}-swatch`;
+      const sectionTitle = figma.createText();
+      sectionTitle.fontName = { family: 'Roboto', style: 'Medium' };
+      sectionTitle.characters = title;
+      sectionTitle.fontSize = 14;
+      sectionTitle.fills = [
+        { type: 'SOLID', color: { r: 0.4, g: 0.4, b: 0.4 } },
+      ];
+      section.appendChild(sectionTitle);
 
-      const solidPaint = {
-        type: 'SOLID',
-        color: { r: 1, g: 1, b: 1 },
-      };
+      for (const size of sizes) {
+        const text = figma.createText();
+        text.fontName = {
+          family: 'Roboto',
+          style:
+            size === 'Display'
+              ? 'Bold'
+              : size === 'Heading'
+              ? 'Medium'
+              : 'Regular',
+        };
+        text.characters = 'This is the font to use';
+        text.fontSize =
+          size === 'Display'
+            ? 32
+            : size === 'Heading'
+            ? 24
+            : size === 'Body'
+            ? 16
+            : 14;
+        text.fills = [{ type: 'SOLID', color: { r: 0.1, g: 0.1, b: 0.1 } }];
+        section.appendChild(text);
+      }
 
-      solidPaint.boundVariables = {
-        color: { type: 'VARIABLE_ALIAS', id: variable.id },
-      };
-
-      rect.fills = [solidPaint];
-
-      const label = figma.createText();
-      label.characters = name;
-      label.fontSize = 12;
-
-      frame.appendChild(rect);
-      frame.appendChild(label);
-      return frame;
+      return section;
     };
 
-    log('Rendering color samples...');
-    const colorRow = figma.createFrame();
-    colorRow.layoutMode = 'HORIZONTAL';
-    colorRow.counterAxisSizingMode = 'AUTO';
-    colorRow.primaryAxisSizingMode = 'AUTO';
-    colorRow.itemSpacing = 16;
+    const displaySection = createTypographySection('Display', ['Display']);
+    const headingSection = createTypographySection('Heading', ['Heading']);
+    const bodySection = createTypographySection('Body', ['Body']);
+    const captionSection = createTypographySection('Caption', ['Caption']);
 
-    for (const [name] of Object.entries(colors)) {
-      const variable = variableMap[`color/${name}`];
-      const preview = createColorPreview(name, variable);
-      colorRow.appendChild(preview);
-    }
+    typographyFrame.appendChild(displaySection);
+    typographyFrame.appendChild(headingSection);
+    typographyFrame.appendChild(bodySection);
+    typographyFrame.appendChild(captionSection);
 
-    colorPreviewFrame.appendChild(colorRow);
+    mainFrame.appendChild(typographyFrame);
 
-    const createTypographyPreview = (name, sizeVariable, weightVariable) => {
-      const frame = figma.createFrame();
-      frame.layoutMode = 'VERTICAL';
-      frame.counterAxisSizingMode = 'AUTO';
-      frame.primaryAxisSizingMode = 'AUTO';
-      frame.itemSpacing = 4;
-      frame.paddingLeft = 0;
-      frame.paddingRight = 0;
-      frame.paddingTop = 0;
-      frame.paddingBottom = 0;
-      frame.name = `${name}-type`;
+    log('Creating colors section...');
+    const colorsFrame = figma.createFrame();
+    colorsFrame.name = 'Colors';
+    colorsFrame.layoutMode = 'VERTICAL';
+    colorsFrame.counterAxisSizingMode = 'AUTO';
+    colorsFrame.primaryAxisSizingMode = 'AUTO';
+    colorsFrame.itemSpacing = 32;
+    colorsFrame.paddingTop = 24;
+    colorsFrame.paddingBottom = 24;
+    colorsFrame.paddingLeft = 24;
+    colorsFrame.paddingRight = 24;
+    colorsFrame.fills = [{ type: 'SOLID', color: { r: 1, g: 1, b: 1 } }];
+    colorsFrame.cornerRadius = 8;
 
-      const text = figma.createText();
-      text.characters = `${name} Sample Text`;
-      text.fontName = { family: 'Inter', style: 'Regular' };
+    const colorsTitle = figma.createText();
+    colorsTitle.fontName = { family: 'Roboto', style: 'Medium' };
+    colorsTitle.characters = 'Colors';
+    colorsTitle.fontSize = 20;
+    colorsFrame.appendChild(colorsTitle);
 
-      text.setBoundVariable('fontSize', sizeVariable);
-      text.setBoundVariable('fontWeight', weightVariable);
+    const createColorSection = (title, colorSet) => {
+      const section = figma.createFrame();
+      section.name = title;
+      section.layoutMode = 'VERTICAL';
+      section.counterAxisSizingMode = 'AUTO';
+      section.primaryAxisSizingMode = 'AUTO';
+      section.itemSpacing = 8;
+      section.fills = [];
 
-      const label = figma.createText();
-      label.characters = name;
-      label.fontSize = 12;
-      label.fontName = { family: 'Inter', style: 'Regular' };
+      const sectionTitle = figma.createText();
+      sectionTitle.fontName = { family: 'Roboto', style: 'Medium' };
+      sectionTitle.characters = title;
+      sectionTitle.fontSize = 14;
+      sectionTitle.fills = [
+        { type: 'SOLID', color: { r: 0.1, g: 0.1, b: 0.1 } },
+      ];
+      section.appendChild(sectionTitle);
 
-      frame.appendChild(text);
-      frame.appendChild(label);
-      return frame;
+      const colorRow = figma.createFrame();
+      colorRow.name = `${title} Row`;
+      colorRow.layoutMode = 'HORIZONTAL';
+      colorRow.counterAxisSizingMode = 'AUTO';
+      colorRow.primaryAxisSizingMode = 'AUTO';
+      colorRow.itemSpacing = 0;
+      colorRow.fills = [];
+
+      if (typeof colorSet === 'string') {
+        const colorSwatch = figma.createRectangle();
+        colorSwatch.resize(48, 48);
+        colorSwatch.fills = [{ type: 'SOLID', color: hexToRgb(colorSet) }];
+        colorRow.appendChild(colorSwatch);
+      } else {
+        const weights = [
+          '25',
+          '50',
+          '100',
+          '200',
+          '300',
+          '400',
+          '500',
+          '600',
+          '700',
+          '800',
+          '900',
+        ];
+        for (const weight of weights) {
+          if (colorSet[weight]) {
+            const colorSwatch = figma.createRectangle();
+            colorSwatch.resize(48, 48);
+            colorSwatch.fills = [
+              { type: 'SOLID', color: hexToRgb(colorSet[weight]) },
+            ];
+            colorRow.appendChild(colorSwatch);
+          }
+        }
+      }
+
+      section.appendChild(colorRow);
+      return section;
     };
 
-    log('Rendering typography samples...');
-    const typeOrder = ['display', 'heading', 'body'];
-    for (const name of typeOrder) {
-      const sizeVariable = variableMap[`type/${name}/size`];
-      const weightVariable = variableMap[`type/${name}/weight`];
-      const preview = createTypographyPreview(
-        name,
-        sizeVariable,
-        weightVariable
-      );
-      typePreviewFrame.appendChild(preview);
-    }
+    const whiteSection = createColorSection('White', colors.white);
+    const brandSection = createColorSection('Brand Color', colors.brand);
+    const supplementarySection = createColorSection(
+      'Supplementary',
+      colors.supplementary
+    );
+    const blackSection = createColorSection('Black', colors.black);
+    const warningSection = createColorSection('Warning', colors.warning);
+    const successSection = createColorSection('Success', colors.success);
+    const errorSection = createColorSection('Error', colors.error);
+
+    colorsFrame.appendChild(whiteSection);
+    colorsFrame.appendChild(brandSection);
+    colorsFrame.appendChild(supplementarySection);
+    colorsFrame.appendChild(blackSection);
+    colorsFrame.appendChild(warningSection);
+    colorsFrame.appendChild(successSection);
+    colorsFrame.appendChild(errorSection);
+
+    mainFrame.appendChild(colorsFrame);
 
     log('Design system setup complete.');
     figma.closePlugin('Done.');
