@@ -1,0 +1,8 @@
+{
+  "color/white": { "id": "VariableID:10:16446" },
+  "color/brand/25": { "id": "VariableID:10:16447" },
+  "fontWeight/light": { "id": "VariableID:10:16522" },
+  "fontWeight/regular": { "id": "VariableID:10:16523" },
+  "fontWeight/medium": { "id": "VariableID:10:16524" },
+  "fontWeight/bold": { "id": "VariableID:10:16525" }
+}

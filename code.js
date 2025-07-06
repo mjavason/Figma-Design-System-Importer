@@ -547,7 +547,6 @@ async function createWeightSection(fontStyle, variableMap) {
  * // samplesFrame contains text nodes showing samples in specified font style
  */
 async function createTextSamples(fontStyle, variableMap) {
-  // Na here e dey happen
   const textColumn = figma.createFrame();
   textColumn.name = `${fontStyle.name} Texts`;
   textColumn.layoutMode = 'VERTICAL';
@@ -633,7 +632,7 @@ const createColorsSection = (variableMap) => {
 
   const colorSections = [
     { title: 'White', colors: config.colors.white },
-    { title: 'Brand Color', colors: config.colors.brand },
+    { title: 'Brand', colors: config.colors.brand },
     { title: 'Supplementary', colors: config.colors.supplementary },
     { title: 'Black', colors: config.colors.black },
     { title: 'Warning', colors: config.colors.warning },
@@ -689,7 +688,7 @@ const createColorSection = (title, colors, variableMap) => {
     swatchesFrame.appendChild(swatch);
   } else {
     for (const [key, value] of Object.entries(colors)) {
-      const swatch = createColorSwatch(key, value, variableMap);
+      const swatch = createColorSwatch(`${title}/${key}`, value, variableMap);
       swatchesFrame.appendChild(swatch);
     }
   }
