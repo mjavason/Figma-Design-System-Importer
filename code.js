@@ -1,4 +1,5 @@
-figma.showUI(`
+figma.showUI(
+  `
   <div style="font-family: monospace; padding: 16px; white-space: pre-wrap;" id="log">Running...</div>
   <script>
     onmessage = (event) => {
@@ -9,7 +10,9 @@ figma.showUI(`
       }
     };
   </script>
-`, { width: 400, height: 300 });
+`,
+  { width: 400, height: 300 }
+);
 
 const log = (text) => figma.ui.postMessage({ type: 'log', text });
 
@@ -23,22 +26,24 @@ const hexToRgb = (hex) => {
 
 (async () => {
   try {
-    log("Creating design system page...");
-    const existing = figma.root.children.find(p => p.name === "🧱 Design System");
+    log('Creating design system page...');
+    const existing = figma.root.children.find(
+      (p) => p.name === '🧱 Design System'
+    );
     const dsPage = existing || figma.createPage();
-    dsPage.name = "🧱 Design System";
+    dsPage.name = '🧱 Design System';
     figma.currentPage = dsPage;
 
-    log("Clearing variable collections...");
+    log('Clearing variable collections...');
     for (const c of figma.variables.getLocalVariableCollections()) c.remove();
 
-    log("Deleting local styles...");
-    figma.getLocalPaintStyles().forEach(s => s.remove());
-    figma.getLocalTextStyles().forEach(s => s.remove());
-    figma.getLocalEffectStyles().forEach(s => s.remove());
-    figma.getLocalGridStyles().forEach(s => s.remove());
+    log('Deleting local styles...');
+    figma.getLocalPaintStyles().forEach((s) => s.remove());
+    figma.getLocalTextStyles().forEach((s) => s.remove());
+    figma.getLocalEffectStyles().forEach((s) => s.remove());
+    figma.getLocalGridStyles().forEach((s) => s.remove());
 
-    log("Loading fonts...");
+    log('Loading fonts...');
     await figma.loadFontAsync({ family: 'Inter', style: 'Regular' });
     await figma.loadFontAsync({ family: 'Inter', style: 'Bold' });
 
@@ -72,21 +77,33 @@ const hexToRgb = (hex) => {
 
     const createVariables = (collection, namespace, vars, type) => {
       for (const [key, value] of Object.entries(vars)) {
-        const variable = figma.variables.createVariable(`${namespace}/${key}`, collection, type);
+        const variable = figma.variables.createVariable(
+          `${namespace}/${key}`,
+          collection,
+          type
+        );
         const val = type === 'COLOR' ? hexToRgb(value) : value;
         variable.setValueForMode(collection.modes[0].modeId, val);
         variableMap[`${namespace}/${key}`] = variable;
       }
     };
 
-    log("Creating variable collections...");
+    log('Creating variable collections...');
     const colorCollection = createVariableCollection('Color Variables');
     createVariables(colorCollection, 'color', colors, 'COLOR');
 
     const typeCollection = createVariableCollection('Typography Variables');
     for (const [key, val] of Object.entries(typography)) {
-      const size = figma.variables.createVariable(`type/${key}/size`, typeCollection, 'FLOAT');
-      const weight = figma.variables.createVariable(`type/${key}/weight`, typeCollection, 'FLOAT');
+      const size = figma.variables.createVariable(
+        `type/${key}/size`,
+        typeCollection,
+        'FLOAT'
+      );
+      const weight = figma.variables.createVariable(
+        `type/${key}/weight`,
+        typeCollection,
+        'FLOAT'
+      );
       size.setValueForMode(typeCollection.modes[0].modeId, val.fontSize);
       weight.setValueForMode(typeCollection.modes[0].modeId, val.fontWeight);
       variableMap[`type/${key}/size`] = size;
@@ -96,9 +113,9 @@ const hexToRgb = (hex) => {
     const spacingCollection = createVariableCollection('Spacing Variables');
     createVariables(spacingCollection, 'space', spacing, 'FLOAT');
 
-    log("Generating variable preview frame...");
+    log('Generating variable preview frame...');
     const previewFrame = figma.createFrame();
-    previewFrame.name = "Variable Preview";
+    previewFrame.name = 'Variable Preview';
     previewFrame.layoutMode = 'VERTICAL';
     previewFrame.counterAxisSizingMode = 'AUTO';
     previewFrame.primaryAxisSizingMode = 'AUTO';
@@ -129,11 +146,11 @@ const hexToRgb = (hex) => {
 
       const solidPaint = {
         type: 'SOLID',
-        color: { r: 1, g: 1, b: 1 }
+        color: { r: 1, g: 1, b: 1 },
       };
 
       solidPaint.boundVariables = {
-        color: { type: 'VARIABLE_ALIAS', id: variable.id }
+        color: { type: 'VARIABLE_ALIAS', id: variable.id },
       };
 
       rect.fills = [solidPaint];
@@ -147,7 +164,7 @@ const hexToRgb = (hex) => {
       return frame;
     };
 
-    log("Rendering color samples...");
+    log('Rendering color samples...');
     const colorRow = figma.createFrame();
     colorRow.layoutMode = 'HORIZONTAL';
     colorRow.counterAxisSizingMode = 'AUTO';
@@ -162,9 +179,59 @@ const hexToRgb = (hex) => {
 
     previewFrame.appendChild(colorRow);
 
-    log("Design system setup complete.");
-    figma.closePlugin("Done.");
+    const createTypographyPreview = (name, sizeVariable, weightVariable) => {
+      const frame = figma.createFrame();
+      frame.layoutMode = 'VERTICAL';
+      frame.counterAxisSizingMode = 'AUTO';
+      frame.primaryAxisSizingMode = 'AUTO';
+      frame.itemSpacing = 4;
+      frame.paddingLeft = 0;
+      frame.paddingRight = 0;
+      frame.paddingTop = 0;
+      frame.paddingBottom = 0;
+      frame.name = `${name}-type`;
+
+      const text = figma.createText();
+      text.characters = `${name} Sample Text`;
+      text.fontName = { family: 'Inter', style: 'Regular' };
+
+      text.setBoundVariable('fontSize', sizeVariable);
+      text.setBoundVariable('fontWeight', weightVariable);
+
+      const label = figma.createText();
+      label.characters = name;
+      label.fontSize = 12;
+      label.fontName = { family: 'Inter', style: 'Regular' };
+
+      frame.appendChild(text);
+      frame.appendChild(label);
+      return frame;
+    };
+
+    log('Rendering typography samples...');
+    const typeColumn = figma.createFrame();
+    typeColumn.layoutMode = 'VERTICAL';
+    typeColumn.counterAxisSizingMode = 'AUTO';
+    typeColumn.primaryAxisSizingMode = 'AUTO';
+    typeColumn.itemSpacing = 16;
+
+    const typeOrder = ['display', 'heading', 'body'];
+    for (const name of typeOrder) {
+      const sizeVariable = variableMap[`type/${name}/size`];
+      const weightVariable = variableMap[`type/${name}/weight`];
+      const preview = createTypographyPreview(
+        name,
+        sizeVariable,
+        weightVariable
+      );
+      typeColumn.appendChild(preview);
+    }
+
+    previewFrame.appendChild(typeColumn);
+
+    log('Design system setup complete.');
+    figma.closePlugin('Done.');
   } catch (e) {
-    log("Error: " + e.message);
+    log('Error: ' + e.message);
   }
 })();
