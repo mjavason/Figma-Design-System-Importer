@@ -126,6 +126,7 @@ const hexToRgb = (hex) => {
     mainFrame.paddingRight = 32;
     mainFrame.x = 0;
     mainFrame.y = 0;
+    mainFrame.fills = [];
     dsPage.appendChild(mainFrame);
 
     log('Generating color preview frame...');
