@@ -257,9 +257,25 @@ const hexToRgb = (hex) => {
       sectionTitle.fontName = { family: 'Roboto', style: 'Medium' };
       sectionTitle.characters = title;
       sectionTitle.fontSize = 14;
-      sectionTitle.fills = [
-        { type: 'SOLID', color: { r: 0.4, g: 0.4, b: 0.4 } },
-      ];
+      const grayVariable = variableMap['color/black/400'];
+      if (grayVariable) {
+        sectionTitle.fills = [
+          {
+            type: 'SOLID',
+            color: { r: 0.4, g: 0.4, b: 0.4 },
+            boundVariables: {
+              color: {
+                type: 'VARIABLE_ALIAS',
+                id: grayVariable.id,
+              },
+            },
+          },
+        ];
+      } else {
+        sectionTitle.fills = [
+          { type: 'SOLID', color: { r: 0.4, g: 0.4, b: 0.4 } },
+        ];
+      }
       section.appendChild(sectionTitle);
 
       for (const size of sizes) {
@@ -274,15 +290,46 @@ const hexToRgb = (hex) => {
               : 'Regular',
         };
         text.characters = 'This is the font to use';
-        text.fontSize =
-          size === 'Display'
-            ? 32
-            : size === 'Heading'
-            ? 24
-            : size === 'Body'
-            ? 16
-            : 14;
-        text.fills = [{ type: 'SOLID', color: { r: 0.1, g: 0.1, b: 0.1 } }];
+
+        const typeKey = size.toLowerCase();
+        const sizeVariable = variableMap[`type/${typeKey}/size`];
+        const lineHeightVariable = variableMap[`type/${typeKey}/lineHeight`];
+        const textColorVariable = variableMap['color/black/800'];
+
+        if (sizeVariable) {
+          text.setBoundVariable('fontSize', sizeVariable);
+        } else {
+          text.fontSize =
+            size === 'Display'
+              ? 32
+              : size === 'Heading'
+              ? 24
+              : size === 'Body'
+              ? 16
+              : 14;
+        }
+
+        if (lineHeightVariable) {
+          text.setBoundVariable('lineHeight', lineHeightVariable);
+        }
+
+        if (textColorVariable) {
+          text.fills = [
+            {
+              type: 'SOLID',
+              color: { r: 0.1, g: 0.1, b: 0.1 },
+              boundVariables: {
+                color: {
+                  type: 'VARIABLE_ALIAS',
+                  id: textColorVariable.id,
+                },
+              },
+            },
+          ];
+        } else {
+          text.fills = [{ type: 'SOLID', color: { r: 0.1, g: 0.1, b: 0.1 } }];
+        }
+
         section.appendChild(text);
       }
 
