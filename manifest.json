@@ -1,0 +1,7 @@
+{
+  "name": "Figma Design Variable Importer",
+  "id": "figma-design-variable-importer",
+  "api": "1.0.0",
+  "main": "code.js",
+  "editorType": ["figma"]
+}

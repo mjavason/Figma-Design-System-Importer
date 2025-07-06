@@ -1,0 +1,5 @@
+{
+  "display": { "fontSize": 48, "fontWeight": 700 },
+  "heading": { "fontSize": 32, "fontWeight": 600 },
+  "body": { "fontSize": 16, "fontWeight": 400 }
+}
