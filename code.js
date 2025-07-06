@@ -350,7 +350,24 @@ const hexToRgb = (hex) => {
       if (typeof colorSet === 'string') {
         const colorSwatch = figma.createRectangle();
         colorSwatch.resize(48, 48);
-        colorSwatch.fills = [{ type: 'SOLID', color: hexToRgb(colorSet) }];
+        const variableKey = `color/${title.toLowerCase()}`;
+        const variable = variableMap[variableKey];
+        if (variable) {
+          colorSwatch.fills = [
+            {
+              type: 'SOLID',
+              color: { r: 1, g: 1, b: 1 },
+              boundVariables: {
+                color: {
+                  type: 'VARIABLE_ALIAS',
+                  id: variable.id,
+                },
+              },
+            },
+          ];
+        } else {
+          colorSwatch.fills = [{ type: 'SOLID', color: hexToRgb(colorSet) }];
+        }
         colorRow.appendChild(colorSwatch);
       } else {
         const weights = [
@@ -370,9 +387,29 @@ const hexToRgb = (hex) => {
           if (colorSet[weight]) {
             const colorSwatch = figma.createRectangle();
             colorSwatch.resize(48, 48);
-            colorSwatch.fills = [
-              { type: 'SOLID', color: hexToRgb(colorSet[weight]) },
-            ];
+            const variableKey = `color/${title
+              .toLowerCase()
+              .replace(' color', '')
+              .replace(' ', '')}/${weight}`;
+            const variable = variableMap[variableKey];
+            if (variable) {
+              colorSwatch.fills = [
+                {
+                  type: 'SOLID',
+                  color: { r: 1, g: 1, b: 1 },
+                  boundVariables: {
+                    color: {
+                      type: 'VARIABLE_ALIAS',
+                      id: variable.id,
+                    },
+                  },
+                },
+              ];
+            } else {
+              colorSwatch.fills = [
+                { type: 'SOLID', color: hexToRgb(colorSet[weight]) },
+              ];
+            }
             colorRow.appendChild(colorSwatch);
           }
         }
