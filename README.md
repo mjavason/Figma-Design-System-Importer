@@ -7,6 +7,7 @@ This is a simple Figma plugin designed to help you quickly import design system 
 - **Imports Color Variables:** Automatically creates local color variables in your Figma file.
 - **Imports Typography Variables:** Sets up local variables for font sizes and weights.
 - **Imports Spacing Variables:** Defines local variables for consistent spacing values.
+- **Generates Variable Preview:** Creates a visual preview frame showing color swatches with variable bindings for easy verification.
 
 ## How to Set Up and Use (No Programming Needed!)
 
@@ -16,7 +17,7 @@ Follow these steps to get the plugin running in Figma:
 
 1.  **Download the Plugin:** If you haven't already, download the entire plugin folder to your computer.
 
-2.  **Add your desired variables** Open the `code.js file`. Look for the `colors`, `typography`, and `spacing` objects to change the values to match your design system. It should look familiar... Make all your changes then save.
+2.  **Add your desired variables** Open the `code.js` file. Look for the `colors`, `typography`, and `spacing` objects to change the values to match your design system. It should look familiar... Make all your changes then save.
 
 ### Step 2: Prepare Figma
 
@@ -41,7 +42,20 @@ Follow these steps to get the plugin running in Figma:
 
     - A small window will appear showing the plugin running. It will clear any existing local variables and styles, then import the new ones.
 
-### Step 5: Check Your Variables
+### Step 5: Check Your Variables and Preview
 
 1.  **Variables Panel:** Once the plugin finishes (it will say "Done."), close the plugin window.
 2.  **Access Variables:** In the right sidebar of Figma, look for the `Variables` section. You should now see new collections for "Color Variables", "Typography Variables", and "Spacing Variables" filled with the imported values!
+3.  **Visual Preview:** The plugin creates a "🧱 Design System" page with a "Variable Preview" frame containing color swatches that are bound to your variables. This allows you to visually verify that your variables are working correctly and see how they look in practice.
+
+## What Gets Created
+
+When you run the plugin, it will:
+
+- Create or switch to a "🧱 Design System" page
+- Clear any existing local variables and styles
+- Import your custom variables organized in collections
+- Generate a visual preview showing color swatches with proper variable bindings
+- Display a real-time log of the import process
+
+The preview frame helps you immediately see your design system in action and verify that all variables are properly configured.

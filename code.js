@@ -23,12 +23,16 @@ const hexToRgb = (hex) => {
 
 (async () => {
   try {
-    log("Clearing existing variable collections...");
-    for (const c of figma.variables.getLocalVariableCollections()) {
-      c.remove();
-    }
+    log("Creating design system page...");
+    const existing = figma.root.children.find(p => p.name === "🧱 Design System");
+    const dsPage = existing || figma.createPage();
+    dsPage.name = "🧱 Design System";
+    figma.currentPage = dsPage;
 
-    log("Deleting all local styles...");
+    log("Clearing variable collections...");
+    for (const c of figma.variables.getLocalVariableCollections()) c.remove();
+
+    log("Deleting local styles...");
     figma.getLocalPaintStyles().forEach(s => s.remove());
     figma.getLocalTextStyles().forEach(s => s.remove());
     figma.getLocalEffectStyles().forEach(s => s.remove());
@@ -60,40 +64,105 @@ const hexToRgb = (hex) => {
       xl: 32,
     };
 
+    const variableMap = {};
+
     const createVariableCollection = (name) => {
       return figma.variables.createVariableCollection(name);
     };
 
     const createVariables = (collection, namespace, vars, type) => {
       for (const [key, value] of Object.entries(vars)) {
-        const variable = figma.variables.createVariable(
-          `${namespace}/${key}`,
-          collection,
-          type
-        );
+        const variable = figma.variables.createVariable(`${namespace}/${key}`, collection, type);
         const val = type === 'COLOR' ? hexToRgb(value) : value;
         variable.setValueForMode(collection.modes[0].modeId, val);
+        variableMap[`${namespace}/${key}`] = variable;
       }
     };
 
-    log("Creating color variables...");
+    log("Creating variable collections...");
     const colorCollection = createVariableCollection('Color Variables');
     createVariables(colorCollection, 'color', colors, 'COLOR');
 
-    log("Creating typography variables...");
     const typeCollection = createVariableCollection('Typography Variables');
     for (const [key, val] of Object.entries(typography)) {
       const size = figma.variables.createVariable(`type/${key}/size`, typeCollection, 'FLOAT');
       const weight = figma.variables.createVariable(`type/${key}/weight`, typeCollection, 'FLOAT');
       size.setValueForMode(typeCollection.modes[0].modeId, val.fontSize);
       weight.setValueForMode(typeCollection.modes[0].modeId, val.fontWeight);
+      variableMap[`type/${key}/size`] = size;
+      variableMap[`type/${key}/weight`] = weight;
     }
 
-    log("Creating spacing variables...");
     const spacingCollection = createVariableCollection('Spacing Variables');
     createVariables(spacingCollection, 'space', spacing, 'FLOAT');
 
-    log("Setup complete.");
+    log("Generating variable preview frame...");
+    const previewFrame = figma.createFrame();
+    previewFrame.name = "Variable Preview";
+    previewFrame.layoutMode = 'VERTICAL';
+    previewFrame.counterAxisSizingMode = 'AUTO';
+    previewFrame.primaryAxisSizingMode = 'AUTO';
+    previewFrame.paddingTop = 32;
+    previewFrame.paddingBottom = 32;
+    previewFrame.paddingLeft = 32;
+    previewFrame.paddingRight = 32;
+    previewFrame.itemSpacing = 24;
+    previewFrame.x = 0;
+    previewFrame.y = 0;
+    dsPage.appendChild(previewFrame);
+
+    const createColorPreview = (name, variable) => {
+      const frame = figma.createFrame();
+      frame.layoutMode = 'VERTICAL';
+      frame.counterAxisSizingMode = 'AUTO';
+      frame.primaryAxisSizingMode = 'AUTO';
+      frame.itemSpacing = 4;
+      frame.paddingLeft = 0;
+      frame.paddingRight = 0;
+      frame.paddingTop = 0;
+      frame.paddingBottom = 0;
+      frame.name = name;
+
+      const rect = figma.createRectangle();
+      rect.resize(120, 80);
+      rect.name = `${name}-swatch`;
+
+      const solidPaint = {
+        type: 'SOLID',
+        color: { r: 1, g: 1, b: 1 }
+      };
+
+      solidPaint.boundVariables = {
+        color: { type: 'VARIABLE_ALIAS', id: variable.id }
+      };
+
+      rect.fills = [solidPaint];
+
+      const label = figma.createText();
+      label.characters = name;
+      label.fontSize = 12;
+
+      frame.appendChild(rect);
+      frame.appendChild(label);
+      return frame;
+    };
+
+    log("Rendering color samples...");
+    const colorRow = figma.createFrame();
+    colorRow.layoutMode = 'HORIZONTAL';
+    colorRow.counterAxisSizingMode = 'AUTO';
+    colorRow.primaryAxisSizingMode = 'AUTO';
+    colorRow.itemSpacing = 16;
+
+    for (const [name] of Object.entries(colors)) {
+      const variable = variableMap[`color/${name}`];
+      const preview = createColorPreview(name, variable);
+      colorRow.appendChild(preview);
+    }
+
+    previewFrame.appendChild(colorRow);
+
+    log("Design system setup complete.");
     figma.closePlugin("Done.");
   } catch (e) {
     log("Error: " + e.message);
