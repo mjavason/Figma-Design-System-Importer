@@ -495,13 +495,21 @@ async function createWeightTitle(fontName, variableMap) {
   weightTitleText.textAlignHorizontal = 'CENTER';
   weightTitleText.textAlignVertical = 'CENTER';
 
+  // Create a parent frame for the group
   const container = figma.createFrame();
-  container.appendChild(weightTitle);
-  container.appendChild(weightTitleText);
   container.resize(120, 36);
   container.fills = [];
 
-  return figma.group([weightTitle, weightTitleText], container);
+  // Position elements at (0,0) within the container
+  weightTitle.x = 0;
+  weightTitle.y = 0;
+  weightTitleText.x = 0;
+  weightTitleText.y = 0;
+
+  container.appendChild(weightTitle);
+  container.appendChild(weightTitleText);
+
+  return container;
 }
 
 /**
@@ -528,12 +536,58 @@ async function createWeightSection(fontStyle, variableMap) {
   const titleGroup = await createWeightTitle(fontStyle.name, variableMap);
   weightSection.appendChild(titleGroup);
 
-  const textColumn = await createTextSamples(fontStyle, variableMap);
-  weightSection.appendChild(textColumn);
+  // Create text samples directly in the weight section
+  for (const fontSize of config.typography.fontSizes) {
+    try {
+      const text = await createSafeText(config.typography.sampleText, {
+        fontSize: variableMap[`fontSize/${fontSize}`] ? undefined : fontSize,
+        fontWeight: variableMap[`fontWeight/${fontStyle.name.toLowerCase()}`]
+          ? undefined
+          : fontStyle.weight,
+        lineHeight: {
+          value: fontSize * config.typography.lineHeightMultiplier,
+          unit: 'PIXELS',
+        },
+        fills: variableMap['color/black/900']
+          ? [
+              {
+                type: 'SOLID',
+                color: { r: 1, g: 1, b: 1 },
+                boundVariables: {
+                  color: {
+                    type: 'VARIABLE_ALIAS',
+                    id: variableMap['color/black/900'].id,
+                  },
+                },
+              },
+            ]
+          : [{ type: 'SOLID', color: hexToRgb(config.colors.black[900]) }],
+      });
+
+      if (variableMap[`fontSize/${fontSize}`]) {
+        text.setBoundVariable('fontSize', {
+          type: 'VARIABLE_ALIAS',
+          id: variableMap[`fontSize/${fontSize}`].id,
+        });
+      }
+
+      if (variableMap[`fontWeight/${fontStyle.name.toLowerCase()}`]) {
+        text.setBoundVariable('fontWeight', {
+          type: 'VARIABLE_ALIAS',
+          id: variableMap[`fontWeight/${fontStyle.name.toLowerCase()}`].id,
+        });
+      }
+
+      weightSection.appendChild(text);
+    } catch (textError) {
+      log(
+        `Failed to create text for ${fontStyle.name} at ${fontSize}px: ${textError.message}`
+      );
+    }
+  }
 
   return weightSection;
 }
-
 /**
  * Creates text samples for a font weight
  * @param {object} fontStyle - Font style config
@@ -672,28 +726,22 @@ const createColorSection = (title, colors, variableMap) => {
   const titleText = figma.createText();
   titleText.characters = title;
   titleText.fontSize = 18;
-  // titleText.fontWeight = 700; // Cant set this field for some reason
   section.appendChild(titleText);
 
-  const swatchesFrame = figma.createFrame();
-  swatchesFrame.name = `${title} Swatches`;
-  swatchesFrame.layoutMode = 'HORIZONTAL';
-  swatchesFrame.counterAxisSizingMode = 'AUTO';
-  swatchesFrame.primaryAxisSizingMode = 'AUTO';
-  swatchesFrame.itemSpacing = config.layout.sectionPadding;
-  swatchesFrame.fills = [];
+  // Create swatches directly in the section
+  section.layoutMode = 'HORIZONTAL'; // Change layout mode for swatches
+  section.counterAxisAlignItems = 'MIN'; // Align items to the start
 
   if (typeof colors === 'string') {
     const swatch = createColorSwatch(title, colors, variableMap);
-    swatchesFrame.appendChild(swatch);
+    section.appendChild(swatch);
   } else {
     for (const [key, value] of Object.entries(colors)) {
       const swatch = createColorSwatch(`${title}/${key}`, value, variableMap);
-      swatchesFrame.appendChild(swatch);
+      section.appendChild(swatch);
     }
   }
 
-  section.appendChild(swatchesFrame);
   return section;
 };
 
