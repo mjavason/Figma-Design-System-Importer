@@ -1,69 +1,4 @@
 // ==============================================
-// UI Setup - Stable (works well, unlikely to need changes)
-// ==============================================
-
-/**
- * Sets up the plugin UI with a log display
- */
-function setupUI() {
-  figma.showUI(
-    `
-    <div style="font-family: monospace; padding: 16px; white-space: pre-wrap;" id="log">Running...</div>
-    <script>
-      onmessage = (event) => {
-        const msg = event.data.pluginMessage;
-        if (msg.type === "log") {
-          const el = document.getElementById("log");
-          el.textContent += "\\n" + msg.text;
-        }
-      };
-    </script>
-  `,
-    { width: 400, height: 300 }
-  );
-}
-
-/**
- * Logs messages to the plugin UI
- * @param {string} text - The message to log
- */
-const log = (text) => figma.ui.postMessage({ type: 'log', text });
-
-// ==============================================
-// Color Utilities - Stable
-// ==============================================
-
-/**
- * Converts hex color to RGB
- * @param {string} hex - Hex color string (e.g. "#FFFFFF")
- * @returns {object} RGB color object
- */
-const hexToRgb = (hex) => {
-  const val = hex.replace('#', '');
-  const r = parseInt(val.slice(0, 2), 16) / 255;
-  const g = parseInt(val.slice(2, 4), 16) / 255;
-  const b = parseInt(val.slice(4, 6), 16) / 255;
-  return { r, g, b };
-};
-
-/**
- * Converts a hex color string to a Figma solid paint object.
- * @param {string} hex - Hexadecimal color string (e.g. "#FFFFFF")
- * @returns {Paint} Figma solid paint object with normalized RGB values
- */
-function hexToRgbPaint(hex) {
-  const bigint = parseInt(hex.replace('#', ''), 16);
-  return {
-    type: 'SOLID',
-    color: {
-      r: ((bigint >> 16) & 255) / 255,
-      g: ((bigint >> 8) & 255) / 255,
-      b: (bigint & 255) / 255,
-    },
-  };
-}
-
-// ==============================================
 // Configuration - Needs occasional updates
 // ==============================================
 
@@ -181,6 +116,82 @@ const config = {
 };
 
 // ==============================================
+// UI Setup - Stable (works well, unlikely to need changes)
+// ==============================================
+
+/**
+ * Sets up the plugin UI with a log display
+ */
+function setupUI() {
+  figma.showUI(
+    `
+    <div style="font-family: monospace; padding: 16px; white-space: pre-wrap;" id="log">Running...</div>
+    <script>
+      onmessage = (event) => {
+        const msg = event.data.pluginMessage;
+        if (msg.type === "log") {
+          const el = document.getElementById("log");
+          el.textContent += "\\n" + msg.text;
+        }
+      };
+    </script>
+  `,
+    { width: 400, height: 300 }
+  );
+}
+
+/**
+ * Logs messages to the plugin UI
+ * @param {string} text - The message to log
+ */
+const log = (text) => figma.ui.postMessage({ type: 'log', text });
+
+// ==============================================
+// Color Utilities - Stable
+// ==============================================
+
+/**
+ * Converts hex color to RGB
+ * @param {string} hex - Hex color string (e.g. "#FFFFFF")
+ * @returns {object} RGB color object with r, g, b values normalized to [0, 1]
+ *
+ * @example
+ * const rgb = hexToRgb("#FF0000");
+ * // rgb = { r: 1, g: 0, b: 0 }
+ */
+const hexToRgb = (hex) => {
+  const val = hex.replace('#', '');
+  const r = parseInt(val.slice(0, 2), 16) / 255;
+  const g = parseInt(val.slice(2, 4), 16) / 255;
+  const b = parseInt(val.slice(4, 6), 16) / 255;
+  return { r, g, b };
+};
+
+/**
+ * Converts a hex color string to a Figma solid paint object.
+ * @param {string} hex - Hexadecimal color string (e.g. "#FFFFFF")
+ * @returns {Paint} Figma solid paint object with normalized RGB values
+ *
+ * @example
+ * const paint = hexToRgbPaint("#00FF00");
+ * // paint = {
+ * //   type: "SOLID",
+ * //   color: { r: 0, g: 1, b: 0 }
+ * // }
+ */
+function hexToRgbPaint(hex) {
+  const bigint = parseInt(hex.replace('#', ''), 16);
+  return {
+    type: 'SOLID',
+    color: {
+      r: ((bigint >> 16) & 255) / 255,
+      g: ((bigint >> 8) & 255) / 255,
+      b: (bigint & 255) / 255,
+    },
+  };
+}
+
+// ==============================================
 // Core Functions - Stable
 // ==============================================
 
@@ -188,6 +199,10 @@ const config = {
  * Creates a variable collection
  * @param {string} name - Collection name
  * @returns {VariableCollection} The created collection
+ *
+ * @example
+ * const collection = createVariableCollection("MyTheme");
+ * // collection.name === "MyTheme"
  */
 const createVariableCollection = (name) => {
   return figma.variables.createVariableCollection(name);
@@ -196,6 +211,11 @@ const createVariableCollection = (name) => {
 /**
  * Creates or finds the design system page
  * @returns {PageNode} The design system page
+ *
+ * @example
+ * const page = getOrCreateDesignSystemPage();
+ * // If a page named "Design System" exists, it is returned
+ * // Otherwise, a new one is created and returned
  */
 const setupDesignSystemPage = () => {
   const existing = figma.root.children.find((p) => p.name === 'Design System');
@@ -208,6 +228,10 @@ const setupDesignSystemPage = () => {
 /**
  * Creates the main container frame
  * @returns {FrameNode} The main frame
+ *
+ * @example
+ * const mainFrame = createMainFrame();
+ * // mainFrame is a new FrameNode ready for content
  */
 const createMainFrame = () => {
   const mainFrame = figma.createFrame();
@@ -230,8 +254,15 @@ const createMainFrame = () => {
  * Creates color variables in a collection
  * @param {VariableCollection} collection - Target collection
  * @param {string} namespace - Variable namespace
- * @param {object|string} colors - Color values
+ * @param {object|string} colors - Color values as object (e.g., { primary: "#FF0000" }) or JSON string
  * @param {object} variableMap - Object to store variable references
+ *
+ * @example
+ * const collection = figma.variables.createVariableCollection("MyCollection");
+ * const variableMap = {};
+ * createColorVariables(collection, "theme", { primary: "#FF0000", secondary: "#00FF00" }, variableMap);
+ * // variableMap now contains references to the created variables:
+ * // { primary: Variable, secondary: Variable }
  */
 const createColorVariables = (collection, namespace, colors, variableMap) => {
   if (typeof colors === 'string') {
@@ -260,8 +291,14 @@ const createColorVariables = (collection, namespace, colors, variableMap) => {
  * Creates number variables in a collection
  * @param {VariableCollection} collection - Target collection
  * @param {string} namespace - Variable namespace
- * @param {object|number} values - Number values
+ * @param {object|number} values - Number values as object (e.g., { spacingSmall: 8 }) or single number
  * @param {object} variableMap - Object to store variable references
+ *
+ * @example
+ * const collection = figma.variables.createVariableCollection("Sizing");
+ * const variableMap = {};
+ * createNumberVariables(collection, "spacing", { small: 8, medium: 16 }, variableMap);
+ * // variableMap = { small: Variable, medium: Variable }
  */
 const createNumberVariables = (collection, namespace, values, variableMap) => {
   if (typeof values === 'number') {
@@ -310,8 +347,12 @@ async function loadFonts() {
 /**
  * Safely creates text with default font
  * @param {string} content - Text content
- * @param {object} options - Text options
+ * @param {object} options - Text options (fontSize, fontWeight, lineHeight, fills)
  * @returns {TextNode} The created text node
+ *
+ * @example
+ * const textNode = await createSafeText("Hello, world", { fontSize: 24, fills: [{ type: "SOLID", color: { r: 0, g: 0, b: 0 } }] });
+ * // textNode contains the created text with specified options
  */
 async function createSafeText(content, options = {}) {
   const defaultFont = figma.getNodeById(figma.root.id).fontName || {
@@ -325,7 +366,7 @@ async function createSafeText(content, options = {}) {
   text.characters = content;
 
   if (options.fontSize) text.fontSize = options.fontSize;
-  // if (options.fontWeight) text.fontWeight = options.fontWeight; // cant be set for some reason
+  // if (options.fontWeight) text.fontWeight = options.fontWeight; // cant set for some reason
   if (options.lineHeight) text.lineHeight = options.lineHeight;
   if (options.fills) text.fills = options.fills;
 
@@ -340,6 +381,11 @@ async function createSafeText(content, options = {}) {
  * Creates the typography section
  * @param {object} variableMap - Map of created variables
  * @returns {FrameNode} The typography frame
+ *
+ * @example
+ * const vars = {};
+ * const typographyFrame = createTypographySection(vars);
+ * // typographyFrame contains text nodes linked to variables in vars
  */
 const createTypographySection = async (variableMap) => {
   const typographyFrame = figma.createFrame();
@@ -352,7 +398,7 @@ const createTypographySection = async (variableMap) => {
   typographyFrame.paddingBottom = config.layout.sectionPadding;
   typographyFrame.paddingLeft = config.layout.sectionPadding;
   typographyFrame.paddingRight = config.layout.sectionPadding;
-  typographyFrame.fills =  [hexToRgbPaint("#FFFFFF")];
+  typographyFrame.fills = [hexToRgbPaint('#FFFFFF')];
 
   const weightsFrame = await createFontWeightsFrame(variableMap);
 
@@ -365,6 +411,11 @@ const createTypographySection = async (variableMap) => {
  * Creates the font weights frame
  * @param {object} variableMap - Map of created variables
  * @returns {Promise<FrameNode>} The weights frame
+ *
+ * @example
+ * const vars = {};
+ * const weightsFrame = await createFontWeightsFrame(vars);
+ * // weightsFrame contains text nodes styled by font weight variables
  */
 const createFontWeightsFrame = async (variableMap) => {
   const weightsFrame = figma.createFrame();
@@ -389,6 +440,11 @@ const createFontWeightsFrame = async (variableMap) => {
  * @param {string} fontName - Font weight name
  * @param {object} variableMap - Map of variables
  * @returns {GroupNode} The title group
+ *
+ * @example
+ * const vars = {};
+ * const group = createWeightTitleGroup("Bold", vars);
+ * // group is a GroupNode with title text styled as Bold
  */
 async function createWeightTitle(fontName, variableMap) {
   const weightTitle = figma.createRectangle();
@@ -453,6 +509,12 @@ async function createWeightTitle(fontName, variableMap) {
  * @param {object} fontStyle - Font style config
  * @param {object} variableMap - Map of variables
  * @returns {FrameNode} The weight section frame
+ *
+ * @example
+ * const vars = {};
+ * const fontStyle = { name: "Regular", weight: 400 };
+ * const section = createFontWeightSection(fontStyle, vars);
+ * // section is a FrameNode representing the font weight section
  */
 async function createWeightSection(fontStyle, variableMap) {
   const weightSection = figma.createFrame();
@@ -477,8 +539,15 @@ async function createWeightSection(fontStyle, variableMap) {
  * @param {object} fontStyle - Font style config
  * @param {object} variableMap - Map of variables
  * @returns {FrameNode} The text samples frame
+ *
+ * @example
+ * const vars = {};
+ * const fontStyle = { name: "Medium", weight: 500 };
+ * const samplesFrame = createTextSamples(fontStyle, vars);
+ * // samplesFrame contains text nodes showing samples in specified font style
  */
 async function createTextSamples(fontStyle, variableMap) {
+  // Na here e dey happen
   const textColumn = figma.createFrame();
   textColumn.name = `${fontStyle.name} Texts`;
   textColumn.layoutMode = 'VERTICAL';
@@ -543,6 +612,11 @@ async function createTextSamples(fontStyle, variableMap) {
  * Creates the colors section
  * @param {object} variableMap - Map of created variables
  * @returns {FrameNode} The colors frame
+ *
+ * @example
+ * const vars = {};
+ * const colorsFrame = createColorsSection(vars);
+ * // colorsFrame contains color swatches linked to variables in vars
  */
 const createColorsSection = (variableMap) => {
   const colorsFrame = figma.createFrame();
@@ -555,7 +629,7 @@ const createColorsSection = (variableMap) => {
   colorsFrame.paddingBottom = config.layout.sectionPadding;
   colorsFrame.paddingLeft = config.layout.sectionPadding;
   colorsFrame.paddingRight = config.layout.sectionPadding;
-  colorsFrame.fills =  [hexToRgbPaint("#FFFFFF")];
+  colorsFrame.fills = [hexToRgbPaint('#FFFFFF')];
 
   const colorSections = [
     { title: 'White', colors: config.colors.white },
@@ -578,9 +652,14 @@ const createColorsSection = (variableMap) => {
 /**
  * Creates a color section
  * @param {string} title - Section title
- * @param {object|string} colors - Color values
+ * @param {object|string} colors - Color values as object (e.g., { primary: "#0000FF" }) or JSON string
  * @param {object} variableMap - Map of variables
  * @returns {FrameNode} The color section frame
+ *
+ * @example
+ * const vars = {};
+ * const section = createColorSection("Brand Colors", { primary: "#0000FF", accent: "#FF00FF" }, vars);
+ * // section is a FrameNode displaying color swatches for the specified colors
  */
 const createColorSection = (title, colors, variableMap) => {
   const section = figma.createFrame();
@@ -622,9 +701,14 @@ const createColorSection = (title, colors, variableMap) => {
 /**
  * Creates a color swatch
  * @param {string} name - Swatch name
- * @param {string} color - Color value
+ * @param {string} color - Color value (hex string)
  * @param {object} variableMap - Map of variables
  * @returns {FrameNode} The color swatch frame
+ *
+ * @example
+ * const vars = {};
+ * const swatch = createColorSwatch("Primary", "#123456", vars);
+ * // swatch is a FrameNode representing the color named "Primary"
  */
 const createColorSwatch = (name, color, variableMap) => {
   const swatch = figma.createFrame();
@@ -659,6 +743,11 @@ const createColorSwatch = (name, color, variableMap) => {
 /**
  * Creates all variables for the design system
  * @param {object} variableMap - Object to store variable references
+ *
+ * @example
+ * const vars = {};
+ * createAllVariables(vars);
+ * // vars now contains references to all created design system variables
  */
 function createAllVariables(variableMap) {
   const colorCollection = createVariableCollection('Colors');
@@ -758,7 +847,6 @@ function createAllVariables(variableMap) {
 
     log('Creating colors section...');
     const colorsFrame = createColorsSection(variableMap);
-
     mainFrame.appendChild(colorsFrame);
 
     log('Design system setup complete.');
