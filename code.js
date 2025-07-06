@@ -183,7 +183,7 @@ const hexToRgb = (hex) => {
 
     log('Creating text styles...');
     const fontSizes = [48, 36, 24, 18, 16, 14, 12, 10];
-    
+
     for (const [weightKey, weightConfig] of Object.entries(typography)) {
       for (const fontSize of fontSizes) {
         try {
@@ -192,10 +192,14 @@ const hexToRgb = (hex) => {
           textStyle.fontName = { family: 'Roboto', style: weightConfig.style };
           textStyle.fontSize = fontSize;
           textStyle.lineHeight = { value: fontSize * 1.5, unit: 'PIXELS' };
-          textStyle.fills = [{ type: 'SOLID', color: { r: 0.1, g: 0.1, b: 0.1 } }];
+          textStyle.fills = [
+            { type: 'SOLID', color: { r: 0.1, g: 0.1, b: 0.1 } },
+          ];
           log(`Created text style: ${textStyle.name}`);
         } catch (styleError) {
-          log(`Failed to create text style for ${weightKey}/${fontSize}: ${styleError.message}`);
+          log(
+            `Failed to create text style for ${weightKey}/${fontSize}: ${styleError.message}`
+          );
         }
       }
     }
@@ -250,7 +254,8 @@ const hexToRgb = (hex) => {
 
     for (const [weightKey, weightConfig] of Object.entries(typography)) {
       const weightSection = figma.createFrame();
-      weightSection.name = weightKey.charAt(0).toUpperCase() + weightKey.slice(1);
+      weightSection.name =
+        weightKey.charAt(0).toUpperCase() + weightKey.slice(1);
       weightSection.layoutMode = 'VERTICAL';
       weightSection.counterAxisSizingMode = 'AUTO';
       weightSection.primaryAxisSizingMode = 'AUTO';
@@ -259,21 +264,29 @@ const hexToRgb = (hex) => {
 
       const weightTitle = figma.createRectangle();
       weightTitle.resize(120, 36);
-      weightTitle.fills = [{ type: 'SOLID', color: { r: 0.85, g: 0.85, b: 0.85 } }];
+      weightTitle.fills = [
+        { type: 'SOLID', color: { r: 0.85, g: 0.85, b: 0.85 } },
+      ];
       weightTitle.cornerRadius = 4;
-      
+
       const weightTitleText = figma.createText();
       weightTitleText.fontName = { family: 'Roboto', style: 'Medium' };
-      weightTitleText.characters = weightKey.charAt(0).toUpperCase() + weightKey.slice(1);
+      weightTitleText.characters =
+        weightKey.charAt(0).toUpperCase() + weightKey.slice(1);
       weightTitleText.fontSize = 14;
-      weightTitleText.fills = [{ type: 'SOLID', color: { r: 0.3, g: 0.3, b: 0.3 } }];
+      weightTitleText.fills = [
+        { type: 'SOLID', color: { r: 0.3, g: 0.3, b: 0.3 } },
+      ];
       weightTitleText.textAlignHorizontal = 'CENTER';
       weightTitleText.textAlignVertical = 'CENTER';
       weightTitleText.x = weightTitle.x;
       weightTitleText.y = weightTitle.y;
       weightTitleText.resize(120, 36);
 
-      const titleGroup = figma.group([weightTitle, weightTitleText], weightSection);
+      const titleGroup = figma.group(
+        [weightTitle, weightTitleText],
+        weightSection
+      );
       titleGroup.name = `${weightKey} Title`;
       weightSection.appendChild(titleGroup);
 
@@ -295,7 +308,9 @@ const hexToRgb = (hex) => {
           text.fills = [{ type: 'SOLID', color: { r: 0.1, g: 0.1, b: 0.1 } }];
           textColumn.appendChild(text);
         } catch (textError) {
-          log(`Failed to create text for ${weightKey} at ${fontSize}px: ${textError.message}`);
+          log(
+            `Failed to create text for ${weightKey} at ${fontSize}px: ${textError.message}`
+          );
         }
       }
 
