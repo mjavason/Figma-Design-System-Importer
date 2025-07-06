@@ -44,9 +44,10 @@ const hexToRgb = (hex) => {
     figma.getLocalGridStyles().forEach((s) => s.remove());
 
     log('Loading fonts...');
-    await figma.loadFontAsync({ family: 'Roboto', style: 'Regular' });
-    await figma.loadFontAsync({ family: 'Roboto', style: 'Medium' });
-    await figma.loadFontAsync({ family: 'Roboto', style: 'Bold' });
+    const fontStyles = ['Light', 'Regular', 'Medium', 'Bold'];
+    for (const style of fontStyles) {
+      await figma.loadFontAsync({ family: 'Roboto', style });
+    }
 
     const colors = {
       white: '#FFFFFF',
@@ -131,10 +132,10 @@ const hexToRgb = (hex) => {
     };
 
     const typography = {
-      display: { fontSize: 48, fontWeight: 700, lineHeight: 60, style: 'Bold' },
-      heading: { fontSize: 32, fontWeight: 600, lineHeight: 40, style: 'Medium' },
-      body: { fontSize: 16, fontWeight: 400, lineHeight: 24, style: 'Regular' },
-      caption: { fontSize: 12, fontWeight: 500, lineHeight: 18, style: 'Medium' },
+      light: { fontWeight: 300, style: 'Light' },
+      regular: { fontWeight: 400, style: 'Regular' },
+      medium: { fontWeight: 500, style: 'Medium' },
+      bold: { fontWeight: 700, style: 'Bold' },
     };
 
     const variableMap = {};
@@ -180,52 +181,22 @@ const hexToRgb = (hex) => {
     createColorVariables(colorCollection, 'color/success', colors.success);
     createColorVariables(colorCollection, 'color/error', colors.error);
 
-    const typeCollection = createVariableCollection('Typography');
-    for (const [key, val] of Object.entries(typography)) {
-      const size = figma.variables.createVariable(
-        `type/${key}/size`,
-        typeCollection,
-        'FLOAT'
-      );
-      const weight = figma.variables.createVariable(
-        `type/${key}/weight`,
-        typeCollection,
-        'FLOAT'
-      );
-      const lineHeight = figma.variables.createVariable(
-        `type/${key}/lineHeight`,
-        typeCollection,
-        'FLOAT'
-      );
-      size.setValueForMode(typeCollection.modes[0].modeId, val.fontSize);
-      weight.setValueForMode(typeCollection.modes[0].modeId, val.fontWeight);
-      lineHeight.setValueForMode(
-        typeCollection.modes[0].modeId,
-        val.lineHeight
-      );
-      variableMap[`type/${key}/size`] = size;
-      variableMap[`type/${key}/weight`] = weight;
-      variableMap[`type/${key}/lineHeight`] = lineHeight;
-    }
-
     log('Creating text styles...');
-    for (const [key, val] of Object.entries(typography)) {
-      try {
-        const textStyle = figma.createTextStyle();
-        textStyle.name = key.charAt(0).toUpperCase() + key.slice(1);
-        
-        // Load the font first
-        await figma.loadFontAsync({ family: 'Roboto', style: val.style });
-        
-        // Set properties individually to avoid frozen object issues
-        textStyle.fontName = { family: 'Roboto', style: val.style };
-        textStyle.fontSize = val.fontSize;
-        textStyle.lineHeight = { value: val.lineHeight, unit: 'PIXELS' };
-        textStyle.fills = [{ type: 'SOLID', color: { r: 0.1, g: 0.1, b: 0.1 } }];
-        
-        log(`Created text style: ${textStyle.name}`);
-      } catch (styleError) {
-        log(`Failed to create text style for ${key}: ${styleError.message}`);
+    const fontSizes = [48, 36, 24, 18, 16, 14, 12, 10];
+    
+    for (const [weightKey, weightConfig] of Object.entries(typography)) {
+      for (const fontSize of fontSizes) {
+        try {
+          const textStyle = figma.createTextStyle();
+          textStyle.name = `${weightKey}/${fontSize}`;
+          textStyle.fontName = { family: 'Roboto', style: weightConfig.style };
+          textStyle.fontSize = fontSize;
+          textStyle.lineHeight = { value: fontSize * 1.5, unit: 'PIXELS' };
+          textStyle.fills = [{ type: 'SOLID', color: { r: 0.1, g: 0.1, b: 0.1 } }];
+          log(`Created text style: ${textStyle.name}`);
+        } catch (styleError) {
+          log(`Failed to create text style for ${weightKey}/${fontSize}: ${styleError.message}`);
+        }
       }
     }
 
@@ -265,100 +236,74 @@ const hexToRgb = (hex) => {
     typeTitle.fontSize = 20;
     typographyFrame.appendChild(typeTitle);
 
-    const createTypographyExample = async (typeKey, typeName) => {
-      const section = figma.createFrame();
-      section.name = typeName;
-      section.layoutMode = 'VERTICAL';
-      section.counterAxisSizingMode = 'AUTO';
-      section.primaryAxisSizingMode = 'AUTO';
-      section.itemSpacing = 8;
-      section.fills = [];
+    log('Creating typography sections...');
+    const weightsFrame = figma.createFrame();
+    weightsFrame.name = 'Font Weights';
+    weightsFrame.layoutMode = 'HORIZONTAL';
+    weightsFrame.counterAxisSizingMode = 'AUTO';
+    weightsFrame.primaryAxisSizingMode = 'AUTO';
+    weightsFrame.itemSpacing = 60;
+    weightsFrame.fills = [];
 
-      const sectionTitle = figma.createText();
-      sectionTitle.fontName = { family: 'Roboto', style: 'Medium' };
-      sectionTitle.characters = typeName;
-      sectionTitle.fontSize = 14;
-      const grayVariable = variableMap['color/black/400'];
-      if (grayVariable) {
-        sectionTitle.fills = [
-          {
-            type: 'SOLID',
-            color: { r: 0.4, g: 0.4, b: 0.4 },
-            boundVariables: {
-              color: {
-                type: 'VARIABLE_ALIAS',
-                id: grayVariable.id,
-              },
-            },
-          },
-        ];
-      } else {
-        sectionTitle.fills = [
-          { type: 'SOLID', color: { r: 0.4, g: 0.4, b: 0.4 } },
-        ];
-      }
-      section.appendChild(sectionTitle);
+    const fontSizesToShow = [48, 36, 24, 18, 16, 14, 12, 10];
+    const sampleText = 'This is the font to use';
 
-      try {
-        const text = figma.createText();
-        const typeConfig = typography[typeKey];
-        
-        // Load font before setting fontName
-        await figma.loadFontAsync({ family: 'Roboto', style: typeConfig.style });
-        
-        text.fontName = { family: 'Roboto', style: typeConfig.style };
-        text.characters = 'The quick brown fox jumps over the lazy dog';
+    for (const [weightKey, weightConfig] of Object.entries(typography)) {
+      const weightSection = figma.createFrame();
+      weightSection.name = weightKey.charAt(0).toUpperCase() + weightKey.slice(1);
+      weightSection.layoutMode = 'VERTICAL';
+      weightSection.counterAxisSizingMode = 'AUTO';
+      weightSection.primaryAxisSizingMode = 'AUTO';
+      weightSection.itemSpacing = 20;
+      weightSection.fills = [];
 
-        const sizeVariable = variableMap[`type/${typeKey}/size`];
-        const lineHeightVariable = variableMap[`type/${typeKey}/lineHeight`];
-        const textColorVariable = variableMap['color/black/800'];
+      const weightTitle = figma.createRectangle();
+      weightTitle.resize(120, 36);
+      weightTitle.fills = [{ type: 'SOLID', color: { r: 0.85, g: 0.85, b: 0.85 } }];
+      weightTitle.cornerRadius = 4;
+      
+      const weightTitleText = figma.createText();
+      weightTitleText.fontName = { family: 'Roboto', style: 'Medium' };
+      weightTitleText.characters = weightKey.charAt(0).toUpperCase() + weightKey.slice(1);
+      weightTitleText.fontSize = 14;
+      weightTitleText.fills = [{ type: 'SOLID', color: { r: 0.3, g: 0.3, b: 0.3 } }];
+      weightTitleText.textAlignHorizontal = 'CENTER';
+      weightTitleText.textAlignVertical = 'CENTER';
+      weightTitleText.x = weightTitle.x;
+      weightTitleText.y = weightTitle.y;
+      weightTitleText.resize(120, 36);
 
-        if (sizeVariable) {
-          text.setBoundVariable('fontSize', sizeVariable);
-        } else {
-          text.fontSize = typeConfig.fontSize;
-        }
+      const titleGroup = figma.group([weightTitle, weightTitleText], weightSection);
+      titleGroup.name = `${weightKey} Title`;
+      weightSection.appendChild(titleGroup);
 
-        if (lineHeightVariable) {
-          text.setBoundVariable('lineHeight', lineHeightVariable);
-        } else {
-          text.lineHeight = { value: typeConfig.lineHeight, unit: 'PIXELS' };
-        }
+      const textColumn = figma.createFrame();
+      textColumn.name = `${weightKey} Texts`;
+      textColumn.layoutMode = 'VERTICAL';
+      textColumn.counterAxisSizingMode = 'AUTO';
+      textColumn.primaryAxisSizingMode = 'AUTO';
+      textColumn.itemSpacing = 12;
+      textColumn.fills = [];
 
-        if (textColorVariable) {
-          text.fills = [
-            {
-              type: 'SOLID',
-              color: { r: 0.1, g: 0.1, b: 0.1 },
-              boundVariables: {
-                color: {
-                  type: 'VARIABLE_ALIAS',
-                  id: textColorVariable.id,
-                },
-              },
-            },
-          ];
-        } else {
+      for (const fontSize of fontSizesToShow) {
+        try {
+          const text = figma.createText();
+          text.fontName = { family: 'Roboto', style: weightConfig.style };
+          text.characters = sampleText;
+          text.fontSize = fontSize;
+          text.lineHeight = { value: fontSize * 1.2, unit: 'PIXELS' };
           text.fills = [{ type: 'SOLID', color: { r: 0.1, g: 0.1, b: 0.1 } }];
+          textColumn.appendChild(text);
+        } catch (textError) {
+          log(`Failed to create text for ${weightKey} at ${fontSize}px: ${textError.message}`);
         }
-
-        section.appendChild(text);
-      } catch (textError) {
-        log(`Failed to create text for ${typeName}: ${textError.message}`);
       }
-      return section;
-    };
 
-    const displaySection = await createTypographyExample('display', 'Display');
-    const headingSection = await createTypographyExample('heading', 'Heading');
-    const bodySection = await createTypographyExample('body', 'Body');
-    const captionSection = await createTypographyExample('caption', 'Caption');
+      weightSection.appendChild(textColumn);
+      weightsFrame.appendChild(weightSection);
+    }
 
-    typographyFrame.appendChild(displaySection);
-    typographyFrame.appendChild(headingSection);
-    typographyFrame.appendChild(bodySection);
-    typographyFrame.appendChild(captionSection);
-
+    typographyFrame.appendChild(weightsFrame);
     mainFrame.appendChild(typographyFrame);
 
     log('Creating colors section...');
