@@ -28,10 +28,10 @@ const hexToRgb = (hex) => {
   try {
     log('Creating design system page...');
     const existing = figma.root.children.find(
-      (p) => p.name === '🧱 Design System'
+      (p) => p.name === 'Design System'
     );
     const dsPage = existing || figma.createPage();
-    dsPage.name = '🧱 Design System';
+    dsPage.name = 'Design System';
     figma.currentPage = dsPage;
 
     log('Clearing variable collections...');
