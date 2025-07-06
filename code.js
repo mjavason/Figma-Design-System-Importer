@@ -719,7 +719,8 @@ const createColorSection = (title, colors, variableMap) => {
   section.name = title;
   section.layoutMode = 'VERTICAL';
   section.counterAxisSizingMode = 'AUTO';
-  section.primaryAxisSizingMode = 'AUTO';
+  section.primaryAxisSizingMode = 'FIXED';
+  section.layoutAlign = 'STRETCH';
   section.itemSpacing = config.layout.sectionPadding;
   section.fills = [];
 
@@ -728,20 +729,26 @@ const createColorSection = (title, colors, variableMap) => {
   titleText.fontSize = 18;
   section.appendChild(titleText);
 
-  // Create swatches directly in the section
-  section.layoutMode = 'HORIZONTAL'; // Change layout mode for swatches
-  section.counterAxisAlignItems = 'MIN'; // Align items to the start
+  const swatchRow = figma.createFrame();
+  swatchRow.name = 'swatch-row';
+  swatchRow.layoutMode = 'HORIZONTAL';
+  swatchRow.counterAxisSizingMode = 'AUTO';
+  swatchRow.primaryAxisSizingMode = 'FIXED';
+  swatchRow.layoutAlign = 'STRETCH';
+  swatchRow.itemSpacing = 8;
+  swatchRow.fills = [];
 
   if (typeof colors === 'string') {
     const swatch = createColorSwatch(title, colors, variableMap);
-    section.appendChild(swatch);
+    swatchRow.appendChild(swatch);
   } else {
     for (const [key, value] of Object.entries(colors)) {
       const swatch = createColorSwatch(`${title}/${key}`, value, variableMap);
-      section.appendChild(swatch);
+      swatchRow.appendChild(swatch);
     }
   }
 
+  section.appendChild(swatchRow);
   return section;
 };
 
