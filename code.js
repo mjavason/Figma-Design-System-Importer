@@ -113,20 +113,46 @@ const hexToRgb = (hex) => {
     const spacingCollection = createVariableCollection('Spacing Variables');
     createVariables(spacingCollection, 'space', spacing, 'FLOAT');
 
-    log('Generating variable preview frame...');
-    const previewFrame = figma.createFrame();
-    previewFrame.name = 'Variable Preview';
-    previewFrame.layoutMode = 'VERTICAL';
-    previewFrame.counterAxisSizingMode = 'AUTO';
-    previewFrame.primaryAxisSizingMode = 'AUTO';
-    previewFrame.paddingTop = 32;
-    previewFrame.paddingBottom = 32;
-    previewFrame.paddingLeft = 32;
-    previewFrame.paddingRight = 32;
-    previewFrame.itemSpacing = 24;
-    previewFrame.x = 0;
-    previewFrame.y = 0;
-    dsPage.appendChild(previewFrame);
+    log('Generating main container frame...');
+    const mainFrame = figma.createFrame();
+    mainFrame.name = 'Design System Preview';
+    mainFrame.layoutMode = 'HORIZONTAL';
+    mainFrame.counterAxisSizingMode = 'AUTO';
+    mainFrame.primaryAxisSizingMode = 'AUTO';
+    mainFrame.itemSpacing = 32;
+    mainFrame.paddingTop = 32;
+    mainFrame.paddingBottom = 32;
+    mainFrame.paddingLeft = 32;
+    mainFrame.paddingRight = 32;
+    mainFrame.x = 0;
+    mainFrame.y = 0;
+    dsPage.appendChild(mainFrame);
+
+    log('Generating color preview frame...');
+    const colorPreviewFrame = figma.createFrame();
+    colorPreviewFrame.name = 'Color Preview';
+    colorPreviewFrame.layoutMode = 'VERTICAL';
+    colorPreviewFrame.counterAxisSizingMode = 'AUTO';
+    colorPreviewFrame.primaryAxisSizingMode = 'AUTO';
+    colorPreviewFrame.paddingTop = 24;
+    colorPreviewFrame.paddingBottom = 24;
+    colorPreviewFrame.paddingLeft = 24;
+    colorPreviewFrame.paddingRight = 24;
+    colorPreviewFrame.itemSpacing = 16;
+    mainFrame.appendChild(colorPreviewFrame);
+
+    log('Generating typography preview frame...');
+    const typePreviewFrame = figma.createFrame();
+    typePreviewFrame.name = 'Typography Preview';
+    typePreviewFrame.layoutMode = 'VERTICAL';
+    typePreviewFrame.counterAxisSizingMode = 'AUTO';
+    typePreviewFrame.primaryAxisSizingMode = 'AUTO';
+    typePreviewFrame.paddingTop = 24;
+    typePreviewFrame.paddingBottom = 24;
+    typePreviewFrame.paddingLeft = 24;
+    typePreviewFrame.paddingRight = 24;
+    typePreviewFrame.itemSpacing = 16;
+    mainFrame.appendChild(typePreviewFrame);
 
     const createColorPreview = (name, variable) => {
       const frame = figma.createFrame();
@@ -165,24 +191,19 @@ const hexToRgb = (hex) => {
     };
 
     log('Rendering color samples...');
-    const colorFrame = figma.createFrame();
-    colorFrame.name = 'Color Samples';
-    colorFrame.layoutMode = 'HORIZONTAL';
-    colorFrame.counterAxisSizingMode = 'AUTO';
-    colorFrame.primaryAxisSizingMode = 'AUTO';
-    colorFrame.itemSpacing = 16;
-    colorFrame.paddingLeft = 16;
-    colorFrame.paddingRight = 16;
-    colorFrame.paddingTop = 16;
-    colorFrame.paddingBottom = 16;
+    const colorRow = figma.createFrame();
+    colorRow.layoutMode = 'HORIZONTAL';
+    colorRow.counterAxisSizingMode = 'AUTO';
+    colorRow.primaryAxisSizingMode = 'AUTO';
+    colorRow.itemSpacing = 16;
 
     for (const [name] of Object.entries(colors)) {
       const variable = variableMap[`color/${name}`];
       const preview = createColorPreview(name, variable);
-      colorFrame.appendChild(preview);
+      colorRow.appendChild(preview);
     }
 
-    previewFrame.appendChild(colorFrame);
+    colorPreviewFrame.appendChild(colorRow);
 
     const createTypographyPreview = (name, sizeVariable, weightVariable) => {
       const frame = figma.createFrame();
@@ -214,17 +235,6 @@ const hexToRgb = (hex) => {
     };
 
     log('Rendering typography samples...');
-    const typeFrame = figma.createFrame();
-    typeFrame.name = 'Typography Samples';
-    typeFrame.layoutMode = 'VERTICAL';
-    typeFrame.counterAxisSizingMode = 'AUTO';
-    typeFrame.primaryAxisSizingMode = 'AUTO';
-    typeFrame.itemSpacing = 16;
-    typeFrame.paddingLeft = 16;
-    typeFrame.paddingRight = 16;
-    typeFrame.paddingTop = 16;
-    typeFrame.paddingBottom = 16;
-
     const typeOrder = ['display', 'heading', 'body'];
     for (const name of typeOrder) {
       const sizeVariable = variableMap[`type/${name}/size`];
@@ -234,10 +244,8 @@ const hexToRgb = (hex) => {
         sizeVariable,
         weightVariable
       );
-      typeFrame.appendChild(preview);
+      typePreviewFrame.appendChild(preview);
     }
-
-    previewFrame.appendChild(typeFrame);
 
     log('Design system setup complete.');
     figma.closePlugin('Done.');
