@@ -55,7 +55,7 @@ function generateShades(hex) {
 const baseColors = {
   brand: '#2F7F7B',
   supplementary: '#D6D397',
-  black: '#424667',
+  black: '#424667', // A must have, for typography (text)
   tertiary: '#BDC7C6',
   white: '#FFFFFF',
   // warning: '#417DF3',
@@ -836,7 +836,7 @@ function createAllVariables(variableMap) {
     const colorsFrame = createColorsSection(variableMap);
     mainFrame.appendChild(colorsFrame);
     log('Design system setup complete.');
-    // figma.closePlugin('Done.');
+    figma.closePlugin('Done.');
   } catch (e) {
     log('Error: ' + e.message);
     // figma.closePlugin('Error occurred - see logs');

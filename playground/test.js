@@ -55,12 +55,12 @@ function generateShades(hex) {
 const baseColors = {
   brand: '#2F7F7B',
   supplementary: '#D6D397',
-  black: '#424667',
+  black: '#424667', // A must have, for typography
   tertiary: '#BDC7C6',
   white: '#FFFFFF',
-  // warning: '#417DF3',
-  // success: '#2CC36B',
-  // error: '#E03131',
+  warning: '#417DF3',
+  success: '#2CC36B',
+  error: '#E03131',
 };
 
 const dynamicColors = {};
@@ -69,13 +69,13 @@ for (const key in baseColors) {
 }
 
 const config = {
-  colors:dynamicColors,
+  colors: dynamicColors,
   typography: {
     fontFamily: 'Roboto',
     fontStyles: [
-      { name: 'Regular', weight: 300, style: 'Regular' },
-      { name: 'Medium', weight: 400, style: 'Medium' },
-      { name: 'SemiBold', weight: 500, style: 'SemiBold' },
+      { name: 'Light', weight: 300, style: 'Light' },
+      { name: 'Regular', weight: 400, style: 'Regular' },
+      { name: 'Medium', weight: 500, style: 'Medium' },
       { name: 'Bold', weight: 700, style: 'Bold' },
     ],
     fontSizes: [48, 36, 24, 18, 16, 14, 12, 10],
@@ -106,6 +106,4 @@ const colorSections = Object.keys(config.colors).map((key) => ({
   colors: config.colors[key],
 }));
 
-
-console.log(colorSections);
-// console.log(dynamicColors)
+console.log(config)
