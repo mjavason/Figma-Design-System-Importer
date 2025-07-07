@@ -1,7 +1,7 @@
 # Figma Design Variable Importer
 
 This plugin streamlines your design workflow by automatically importing design system variables—including colors, typography, and spacing—directly into your Figma files. It eliminates the need for manual entry, reduces errors, and ensures consistency across your designs.
-![Design System](https://raw.githubusercontent.com/mjavason/Figma-Design-System-Importer/main/public/eesign-system-screenshot.png)
+![Design System](https://raw.githubusercontent.com/mjavason/Figma-Design-System-Importer/main/public/design-system-screenshot.png)
 
 ## Features
 
