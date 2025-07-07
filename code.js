@@ -53,14 +53,14 @@ function generateShades(hex) {
 }
 
 const baseColors = {
-  brand: '#2F7F7B',
-  supplementary: '#D6D397',
-  black: '#424667', // A must have, for typography (text)
-  tertiary: '#BDC7C6',
+  brand: '#5A8F7B',
+  supplementary: '#D3B14F',
+  black: '#424667',
+  tertiary: '#A0C1C1',
   white: '#FFFFFF',
-  // warning: '#417DF3',
-  // success: '#2CC36B',
-  // error: '#E03131',
+  warning: '#FF9240',
+  success: '#3AB97F',
+  error: '#D44343',
 };
 
 const dynamicColors = {};
@@ -73,14 +73,13 @@ const config = {
   typography: {
     fontFamily: 'Roboto',
     fontStyles: [
-      { name: 'Light', weight: 300, style: 'Light' },
       { name: 'Regular', weight: 400, style: 'Regular' },
       { name: 'Medium', weight: 500, style: 'Medium' },
       { name: 'Bold', weight: 700, style: 'Bold' },
     ],
     fontSizes: [48, 36, 24, 18, 16, 14, 12, 10],
     lineHeightMultiplier: 1.2,
-    sampleText: 'The quick brown fox jumps over the lazy dog',
+    sampleText: 'This is sample text',
   },
   spacing: {
     small: 8,

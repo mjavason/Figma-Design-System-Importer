@@ -1,61 +1,49 @@
-# Figma Design System Importer
+# Figma Design Variable Importer
 
-This is a simple Figma plugin designed to help you quickly import design system variables (like colors, typography, and spacing) directly into your Figma file. This saves you from manually adding each variable and helps prevent typos, making your design process smoother and more consistent.
+This plugin streamlines your design workflow by automatically importing design system variables—including colors, typography, and spacing—directly into your Figma files. It eliminates the need for manual entry, reduces errors, and ensures consistency across your designs.
+![Design System](https://raw.githubusercontent.com/mjavason/Figma-Design-System-Importer/main/public/eesign-system-screenshot.png)
 
 ## Features
 
-- **Imports Color Variables:** Automatically creates local color variables in your Figma file.
-- **Imports Typography Variables:** Sets up local variables for font sizes and weights.
-- **Imports Spacing Variables:** Defines local variables for consistent spacing values.
-- **Generates Variable Preview:** Creates a visual preview frame showing color swatches with variable bindings for easy verification.
+- **Automated Variable Imports:** Quickly creates local variables for colors, typography (font sizes and weights), and spacing.
+- **Dynamic Color Shades:** Automatically generates a full spectrum of shades for your base colors, saving you time and effort.
+- **Visual Preview:** Generates a comprehensive design system page with color swatches and text styles, all linked to the imported variables for easy verification.
+- **Customizable Configuration:** Easily tailor the design system to your needs by modifying a simple configuration file.
 
-## How to Set Up and Use (No Programming Needed!)
+## How to Use
 
-Follow these steps to get the plugin running in Figma:
+### 1. Configure Your Design System
 
-### Step 1: Get the Plugin Files
+Before running the plugin, you'll need to define your design system's properties in the `code.js` file. Open this file and modify the following sections:
 
-1.  **Download the Plugin:** If you haven't already, download the entire plugin folder to your computer.
+- **`baseColors`:** Define your primary brand colors. The plugin will automatically generate a range of shades for each.
+- **`typography`:** Set your desired font family, styles (weights), and sizes.
+- **`spacing`:** Specify your spacing values.
 
-2.  **Add your desired variables** Open the `code.js` file. Look for the `colors`, `typography`, and `spacing` objects to change the values to match your design system. It should look familiar... Make all your changes then save.
+### 2. Install the Plugin in Figma
 
-### Step 2: Prepare Figma
+1.  **Open the Figma Desktop App:** This plugin requires the desktop version of Figma.
+2.  **Go to Plugins:** In the top menu, navigate to `Plugins` > `Development` > `Import plugin from manifest...`.
+3.  **Select the `manifest.json` file:** Locate the plugin's directory and select the `manifest.json` file.
 
-1.  **Open Figma Desktop App:** Make sure you are using the Figma desktop application, not the web version. This is important for installing local plugins.
-2.  **Go to Plugins:** In Figma, click on `Plugins` in the top menu bar.
-3.  **Develop Plugins:** Hover over `Plugins` and then click on `Development`.
-4.  **Import Plugin from Manifest...:** Select `Import Plugin from Manifest...`.
+### 3. Run the Plugin
 
-### Step 3: Import the Plugin
+1.  **Open a Figma File:** Create a new file or open an existing one.
+2.  **Run the Plugin:** Go to `Plugins` > `Development` > `Figma Design Variable Importer`.
 
-1.  **Navigate to the Plugin Folder:** A file browser window will open. Navigate to the folder that you downloaded in Step 1.
-2.  **Select `manifest.json`:** Inside the `Design System Importer` folder, select the file named `manifest.json` and click `Open`.
+The plugin will then:
 
-    - **Success!** You should see a message saying the plugin was imported successfully.
-
-### Step 4: Run the Plugin
-
-1.  **Open a Figma File:** Open any Figma design file (or create a new one).
-2.  **Run the Plugin:** Go back to `Plugins` in the top menu bar.
-3.  **Development:** Hover over `Development`.
-4.  **Select "Figma Design Variable Importer":** Click on `Figma Design Variable Importer` (this is the name of the plugin).
-
-    - A small window will appear showing the plugin running. It will clear any existing local variables and styles, then import the new ones.
-
-### Step 5: Check Your Variables and Preview
-
-1.  **Variables Panel:** Once the plugin finishes (it will say "Done."), close the plugin window.
-2.  **Access Variables:** In the right sidebar of Figma, look for the `Variables` section. You should now see new collections for "Color Variables", "Typography Variables", and "Spacing Variables" filled with the imported values!
-3.  **Visual Preview:** The plugin creates a "🧱 Design System" page with a "Variable Preview" frame containing color swatches that are bound to your variables. This allows you to visually verify that your variables are working correctly and see how they look in practice.
+- Create a new page named "Design System".
+- Clear any existing local variables.
+- Generate and import all your configured design system variables.
+- Create a visual preview of the imported colors and typography.
 
 ## What Gets Created
 
-When you run the plugin, it will:
+- **A "Design System" Page:** A dedicated page that houses all the visual elements of your design system.
+- **Variable Collections:** Neatly organized collections for `Colors`, `Typography`, and `Spacing` in the "Local Variables" panel.
+- **Visual Previews:**
+  - **Colors:** A section with all your color variables displayed as swatches.
+  - **Typography:** A section that showcases your font styles and sizes.
 
-- Create or switch to a "🧱 Design System" page
-- Clear any existing local variables and styles
-- Import your custom variables organized in collections
-- Generate a visual preview showing color swatches with proper variable bindings
-- Display a real-time log of the import process
-
-The preview frame helps you immediately see your design system in action and verify that all variables are properly configured.
+This visual representation allows you to instantly verify that your design system has been imported correctly and is ready to use.
