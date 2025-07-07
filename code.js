@@ -1,89 +1,75 @@
 // ==============================================
-// Configuration - Needs occasional updates
+// Configuration - Dynamic and Efficient
 // ==============================================
 
+function generateShades(hex) {
+  function hexToRgb(hex) {
+    hex = hex.replace('#', '');
+    if (hex.length === 3) {
+      hex = hex
+        .split('')
+        .map((c) => c + c)
+        .join('');
+    }
+    const bigint = parseInt(hex, 16);
+    return [(bigint >> 16) & 255, (bigint >> 8) & 255, bigint & 255];
+  }
+
+  function rgbToHex(r, g, b) {
+    return (
+      '#' +
+      [r, g, b]
+        .map((x) =>
+          Math.max(0, Math.min(255, Math.round(x)))
+            .toString(16)
+            .padStart(2, '0')
+        )
+        .join('')
+    );
+  }
+
+  function mix(color, percent) {
+    const mixWith = percent > 0 ? 255 : 0;
+    const p = Math.abs(percent);
+    return color.map((c) => c + (mixWith - c) * p);
+  }
+
+  const baseRgb = hexToRgb(hex);
+  const result = {};
+
+  const keys = [10, 20, 30, 40, 50, 'base', 60, 70, 80, 90, 100];
+  keys.forEach((key, i) => {
+    if (key === 'base') {
+      result[key] = hex;
+    } else {
+      const index = i < 5 ? 5 - i : i - 6 + 1;
+      const factor = i < 5 ? index * 0.1 : -index * 0.1;
+      const mixed = mix(baseRgb, factor);
+      result[key] = rgbToHex(...mixed);
+    }
+  });
+
+  return result;
+}
+
+const baseColors = {
+  brand: '#2F7F7B',
+  supplementary: '#D6D397',
+  black: '#424667',
+  tertiary: '#BDC7C6',
+  white: '#FFFFFF',
+  // warning: '#417DF3',
+  // success: '#2CC36B',
+  // error: '#E03131',
+};
+
+const dynamicColors = {};
+for (const key in baseColors) {
+  dynamicColors[key] = generateShades(baseColors[key]);
+}
+
 const config = {
-  colors: {
-    white: '#FFFFFF',
-    brand: {
-      25: '#F5F8FF',
-      50: '#EBF2FF',
-      100: '#D1E0FF',
-      200: '#B3CCFF',
-      300: '#84ADFF',
-      400: '#528BFF',
-      500: '#2563EB',
-      600: '#1D4ED8',
-      700: '#1E40AF',
-      800: '#1E3A8A',
-      900: '#1E3A8A',
-    },
-    supplementary: {
-      25: '#F0FDFF',
-      50: '#ECFEFF',
-      100: '#CFFAFE',
-      200: '#A5F3FC',
-      300: '#67E8F9',
-      400: '#22D3EE',
-      500: '#06B6D4',
-      600: '#0891B2',
-      700: '#0E7490',
-      800: '#155E75',
-      900: '#164E63',
-    },
-    black: {
-      25: '#FCFCFD',
-      50: '#F9FAFB',
-      100: '#F2F4F7',
-      200: '#E4E7EC',
-      300: '#D0D5DD',
-      400: '#98A2B3',
-      500: '#667085',
-      600: '#475467',
-      700: '#344054',
-      800: '#1D2939',
-      900: '#101828',
-    },
-    warning: {
-      25: '#FFFCF5',
-      50: '#FFFAEB',
-      100: '#FEF0C7',
-      200: '#FEDF89',
-      300: '#FEC84B',
-      400: '#FDB022',
-      500: '#F79009',
-      600: '#DC6803',
-      700: '#B54708',
-      800: '#93370D',
-      900: '#7A2E0E',
-    },
-    success: {
-      25: '#F6FEF9',
-      50: '#ECFDF3',
-      100: '#D1FADF',
-      200: '#A6F4C5',
-      300: '#6CE9A6',
-      400: '#32D583',
-      500: '#12B76A',
-      600: '#039855',
-      700: '#027A48',
-      800: '#05603A',
-      900: '#054F31',
-    },
-    error: {
-      25: '#FFFBFA',
-      50: '#FEF3F2',
-      100: '#FEE4E2',
-      200: '#FECDCA',
-      300: '#FDA29B',
-      400: '#F97066',
-      500: '#F04438',
-      600: '#D92D20',
-      700: '#B42318',
-      800: '#912018',
-      900: '#7A271A',
-    },
-  },
+  colors: dynamicColors,
   typography: {
     fontFamily: 'Roboto',
     fontStyles: [
@@ -94,7 +80,7 @@ const config = {
     ],
     fontSizes: [48, 36, 24, 18, 16, 14, 12, 10],
     lineHeightMultiplier: 1.2,
-    sampleText: 'This is the font to use',
+    sampleText: 'The quick brown fox jumps over the lazy dog',
   },
   spacing: {
     small: 8,
@@ -114,6 +100,11 @@ const config = {
     fontWeightColumnSpacing: 60,
   },
 };
+
+const colorSections = Object.keys(config.colors).map((key) => ({
+  title: key.charAt(0).toUpperCase() + key.slice(1),
+  colors: config.colors[key],
+}));
 
 // ==============================================
 // UI Setup - Stable (works well, unlikely to need changes)
@@ -254,7 +245,7 @@ const createMainFrame = () => {
  * Creates color variables in a collection
  * @param {VariableCollection} collection - Target collection
  * @param {string} namespace - Variable namespace
- * @param {object|string} colors - Color values as object (e.g., { primary: "#FF0000" }) or JSON string
+ * @param {object} colors - Color values as object (e.g., { primary: "#FF0000" }) or JSON string
  * @param {object} variableMap - Object to store variable references
  *
  * @example
@@ -265,25 +256,15 @@ const createMainFrame = () => {
  * // { primary: Variable, secondary: Variable }
  */
 const createColorVariables = (collection, namespace, colors, variableMap) => {
-  if (typeof colors === 'string') {
+  for (const [key, value] of Object.entries(colors)) {
+    const fullKey = `${namespace}/${key}`;
     const variable = figma.variables.createVariable(
-      `${namespace}`,
+      fullKey,
       collection,
       'COLOR'
     );
-    variable.setValueForMode(collection.modes[0].modeId, hexToRgb(colors));
-    variableMap[namespace] = variable;
-  } else {
-    for (const [key, value] of Object.entries(colors)) {
-      const fullKey = `${namespace}/${key}`;
-      const variable = figma.variables.createVariable(
-        fullKey,
-        collection,
-        'COLOR'
-      );
-      variable.setValueForMode(collection.modes[0].modeId, hexToRgb(value));
-      variableMap[fullKey] = variable;
-    }
+    variable.setValueForMode(collection.modes[0].modeId, hexToRgb(value));
+    variableMap[fullKey] = variable;
   }
 };
 
@@ -428,6 +409,7 @@ const createFontWeightsFrame = async (variableMap) => {
   weightsFrame.fills = [];
 
   for (const fontStyle of config.typography.fontStyles) {
+    log(JSON.stringify(fontStyle));
     const weightSection = await createWeightSection(fontStyle, variableMap);
     weightsFrame.appendChild(weightSection);
   }
@@ -450,7 +432,7 @@ async function createWeightTitle(fontName, variableMap) {
   const weightTitle = figma.createRectangle();
   weightTitle.resize(120, 36);
 
-  if (variableMap['color/black/200']) {
+  if (variableMap['color/black/base']) {
     weightTitle.fills = [
       {
         type: 'SOLID',
@@ -458,15 +440,13 @@ async function createWeightTitle(fontName, variableMap) {
         boundVariables: {
           color: {
             type: 'VARIABLE_ALIAS',
-            id: variableMap['color/black/200'].id,
+            id: variableMap['color/black/base'].id,
           },
         },
       },
     ];
   } else {
-    weightTitle.fills = [
-      { type: 'SOLID', color: hexToRgb(config.colors.black[200]) },
-    ];
+    weightTitle.fills = [{ type: 'SOLID', color: hexToRgb('#000000') }];
   }
 
   weightTitle.cornerRadius = 4;
@@ -475,7 +455,7 @@ async function createWeightTitle(fontName, variableMap) {
     fontSize: 14,
     fontWeight: config.typography.fontStyles.find((s) => s.name === 'Medium')
       .weight,
-    fills: variableMap['color/black/700']
+    fills: variableMap['color/black/base']
       ? [
           {
             type: 'SOLID',
@@ -483,12 +463,12 @@ async function createWeightTitle(fontName, variableMap) {
             boundVariables: {
               color: {
                 type: 'VARIABLE_ALIAS',
-                id: variableMap['color/black/700'].id,
+                id: variableMap['color/black/base'].id,
               },
             },
           },
         ]
-      : [{ type: 'SOLID', color: hexToRgb(config.colors.black[700]) }],
+      : [{ type: 'SOLID', color: hexToRgb('#000000') }],
   });
 
   weightTitleText.resize(120, 36);
@@ -536,7 +516,6 @@ async function createWeightSection(fontStyle, variableMap) {
   const titleGroup = await createWeightTitle(fontStyle.name, variableMap);
   weightSection.appendChild(titleGroup);
 
-  // Create text samples directly in the weight section
   for (const fontSize of config.typography.fontSizes) {
     try {
       const text = await createSafeText(config.typography.sampleText, {
@@ -548,7 +527,7 @@ async function createWeightSection(fontStyle, variableMap) {
           value: fontSize * config.typography.lineHeightMultiplier,
           unit: 'PIXELS',
         },
-        fills: variableMap['color/black/900']
+        fills: variableMap['color/black/base']
           ? [
               {
                 type: 'SOLID',
@@ -556,7 +535,7 @@ async function createWeightSection(fontStyle, variableMap) {
                 boundVariables: {
                   color: {
                     type: 'VARIABLE_ALIAS',
-                    id: variableMap['color/black/900'].id,
+                    id: variableMap['color/black/base'].id,
                   },
                 },
               },
@@ -588,6 +567,7 @@ async function createWeightSection(fontStyle, variableMap) {
 
   return weightSection;
 }
+
 /**
  * Creates text samples for a font weight
  * @param {object} fontStyle - Font style config
@@ -620,7 +600,7 @@ async function createTextSamples(fontStyle, variableMap) {
           value: fontSize * config.typography.lineHeightMultiplier,
           unit: 'PIXELS',
         },
-        fills: variableMap['color/black/900']
+        fills: variableMap['color/black/base']
           ? [
               {
                 type: 'SOLID',
@@ -628,7 +608,7 @@ async function createTextSamples(fontStyle, variableMap) {
                 boundVariables: {
                   color: {
                     type: 'VARIABLE_ALIAS',
-                    id: variableMap['color/black/900'].id,
+                    id: variableMap['color/black/base'].id,
                   },
                 },
               },
@@ -684,16 +664,6 @@ const createColorsSection = (variableMap) => {
   colorsFrame.paddingRight = config.layout.sectionPadding;
   colorsFrame.fills = [hexToRgbPaint('#FFFFFF')];
 
-  const colorSections = [
-    { title: 'White', colors: config.colors.white },
-    { title: 'Brand', colors: config.colors.brand },
-    { title: 'Supplementary', colors: config.colors.supplementary },
-    { title: 'Black', colors: config.colors.black },
-    { title: 'Warning', colors: config.colors.warning },
-    { title: 'Success', colors: config.colors.success },
-    { title: 'Error', colors: config.colors.error },
-  ];
-
   colorSections.forEach(({ title, colors }) => {
     const section = createColorSection(title, colors, variableMap);
     colorsFrame.appendChild(section);
@@ -705,7 +675,7 @@ const createColorsSection = (variableMap) => {
 /**
  * Creates a color section
  * @param {string} title - Section title
- * @param {object|string} colors - Color values as object (e.g., { primary: "#0000FF" }) or JSON string
+ * @param {object} colors - Color values as object (e.g., { primary: "#0000FF" })
  * @param {object} variableMap - Map of variables
  * @returns {FrameNode} The color section frame
  *
@@ -738,14 +708,9 @@ const createColorSection = (title, colors, variableMap) => {
   swatchRow.itemSpacing = 8;
   swatchRow.fills = [];
 
-  if (typeof colors === 'string') {
-    const swatch = createColorSwatch(title, colors, variableMap);
+  for (const [key, value] of Object.entries(colors)) {
+    const swatch = createColorSwatch(`${title}/${key}`, value, variableMap);
     swatchRow.appendChild(swatch);
-  } else {
-    for (const [key, value] of Object.entries(colors)) {
-      const swatch = createColorSwatch(`${title}/${key}`, value, variableMap);
-      swatchRow.appendChild(swatch);
-    }
   }
 
   section.appendChild(swatchRow);
@@ -805,48 +770,14 @@ const createColorSwatch = (name, color, variableMap) => {
  */
 function createAllVariables(variableMap) {
   const colorCollection = createVariableCollection('Colors');
-  createColorVariables(
-    colorCollection,
-    'color/white',
-    config.colors.white,
-    variableMap
-  );
-  createColorVariables(
-    colorCollection,
-    'color/brand',
-    config.colors.brand,
-    variableMap
-  );
-  createColorVariables(
-    colorCollection,
-    'color/supplementary',
-    config.colors.supplementary,
-    variableMap
-  );
-  createColorVariables(
-    colorCollection,
-    'color/black',
-    config.colors.black,
-    variableMap
-  );
-  createColorVariables(
-    colorCollection,
-    'color/warning',
-    config.colors.warning,
-    variableMap
-  );
-  createColorVariables(
-    colorCollection,
-    'color/success',
-    config.colors.success,
-    variableMap
-  );
-  createColorVariables(
-    colorCollection,
-    'color/error',
-    config.colors.error,
-    variableMap
-  );
+  for (const [group, shades] of Object.entries(config.colors)) {
+    createColorVariables(
+      colorCollection,
+      `color/${group}`,
+      shades,
+      variableMap
+    );
+  }
 
   const typographyCollection = createVariableCollection('Typography');
   for (const size of config.typography.fontSizes) {
@@ -867,12 +798,14 @@ function createAllVariables(variableMap) {
   }
 
   const spacingCollection = createVariableCollection('Spacing');
-  createNumberVariables(
-    spacingCollection,
-    'spacing',
-    config.spacing,
-    variableMap
-  );
+  for (const [key, value] of Object.entries(config.spacing)) {
+    createNumberVariables(
+      spacingCollection,
+      `spacing/${key}`,
+      value,
+      variableMap
+    );
+  }
 }
 
 (async () => {
@@ -902,9 +835,8 @@ function createAllVariables(variableMap) {
     log('Creating colors section...');
     const colorsFrame = createColorsSection(variableMap);
     mainFrame.appendChild(colorsFrame);
-
     log('Design system setup complete.');
-    figma.closePlugin('Done.');
+    // figma.closePlugin('Done.');
   } catch (e) {
     log('Error: ' + e.message);
     // figma.closePlugin('Error occurred - see logs');
