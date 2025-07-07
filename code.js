@@ -431,24 +431,7 @@ const createFontWeightsFrame = async (variableMap) => {
 async function createWeightTitle(fontName, variableMap) {
   const weightTitle = figma.createRectangle();
   weightTitle.resize(120, 36);
-
-  if (variableMap['color/black/base']) {
-    weightTitle.fills = [
-      {
-        type: 'SOLID',
-        color: { r: 1, g: 1, b: 1 },
-        boundVariables: {
-          color: {
-            type: 'VARIABLE_ALIAS',
-            id: variableMap['color/black/base'].id,
-          },
-        },
-      },
-    ];
-  } else {
-    weightTitle.fills = [{ type: 'SOLID', color: hexToRgb('#000000') }];
-  }
-
+  weightTitle.fills = [{ type: 'SOLID', color: hexToRgb('#D3DAE5') }];
   weightTitle.cornerRadius = 4;
 
   const weightTitleText = await createSafeText(fontName, {
