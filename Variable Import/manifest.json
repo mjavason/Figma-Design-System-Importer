@@ -1,0 +1,7 @@
+{
+  "name": "Simple Variable Importer",
+  "id": "simple-variable-importer",
+  "api": "1.0.0",
+  "main": "code.js",
+  "editorType": ["figma"]
+}

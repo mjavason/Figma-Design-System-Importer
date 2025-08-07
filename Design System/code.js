@@ -53,14 +53,11 @@ function generateShades(hex) {
 }
 
 const baseColors = {
-  brand: '#5A8F7B',
-  supplementary: '#D3B14F',
-  black: '#424667',
-  tertiary: '#A0C1C1',
-  white: '#FFFFFF',
-  warning: '#FF9240',
-  success: '#3AB97F',
-  error: '#D44343',
+  primary: '#1C3F3A',
+  secondary: '#EBE9DA',
+  tertiary: '#E0E9E9',
+  black: '#0A0C29',
+  white: '#FFFFFF'
 };
 
 const dynamicColors = {};
