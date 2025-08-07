@@ -1,49 +1,68 @@
-# Figma Design Variable Importer
+# Figma Design System & Variable Importers
 
-This plugin streamlines your design workflow by automatically importing design system variables—including colors, typography, and spacing—directly into your Figma files. It eliminates the need for manual entry, reduces errors, and ensures consistency across your designs.
-![Design System](https://raw.githubusercontent.com/mjavason/Figma-Design-System-Importer/main/public/design-system-screenshot.png)
+This repository contains two Figma plugins designed to streamline your design workflow by automatically importing design system variables—including colors, typography, and spacing—directly into your Figma files.
 
-## Features
+1.  **Design System Importer:** A comprehensive plugin that not only creates local variables but also generates a visual "Design System" page in Figma to preview your colors and typography.
+2.  **Simple Variable Importer:** A lightweight plugin that focuses solely on creating and importing local variables without generating a visual preview page.
 
-- **Automated Variable Imports:** Quickly creates local variables for colors, typography (font sizes and weights), and spacing.
-- **Dynamic Color Shades:** Automatically generates a full spectrum of shades for your base colors, saving you time and effort.
-- **Visual Preview:** Generates a comprehensive design system page with color swatches and text styles, all linked to the imported variables for easy verification.
-- **Customizable Configuration:** Easily tailor the design system to your needs by modifying a simple configuration file.
+---
 
-## How to Use
+## 1. Design System Importer
 
-### 1. Configure Your Design System
+This plugin is ideal for when you want a visual reference of your design system directly in your Figma file. It creates local variables and then builds a page with color swatches and text styles linked to those variables.
 
-Before running the plugin, you'll need to define your design system's properties in the `code.js` file. Open this file and modify the following sections:
+![Design System Preview](https://raw.githubusercontent.com/mjavason/Figma-Design-System-Importer/main/public/design-system-screenshot.png)
 
-- **`baseColors`:** Define your primary brand colors. The plugin will automatically generate a range of shades for each.
-- **`typography`:** Set your desired font family, styles (weights), and sizes.
-- **`spacing`:** Specify your spacing values.
+### Features
 
-### 2. Install the Plugin in Figma
+-   **Automated Variable Imports:** Quickly creates local variables for colors, typography (font sizes and weights), and spacing.
+-   **Dynamic Color Shades:** Automatically generates a full spectrum of shades for your base colors.
+-   **Visual Preview Page:** Generates a "Design System" page with color swatches and text styles for easy verification.
 
-1.  **Open the Figma Desktop App:** This plugin requires the desktop version of Figma.
-2.  **Go to Plugins:** In the top menu, navigate to `Plugins` > `Development` > `Import plugin from manifest...`.
-3.  **Select the `manifest.json` file:** Locate the plugin's directory and select the `manifest.json` file.
+### How to Use
 
-### 3. Run the Plugin
+#### a. Configure Your Design System
 
-1.  **Open a Figma File:** Create a new file or open an existing one.
-2.  **Run the Plugin:** Go to `Plugins` > `Development` > `Figma Design Variable Importer`.
+Before running the plugin, define your design system properties in the `Design System/code.js` file. Modify the `config` object at the top of the file to set your brand colors, typography, and spacing values.
 
-The plugin will then:
+#### b. Install the Plugin in Figma
 
-- Create a new page named "Design System".
-- Clear any existing local variables.
-- Generate and import all your configured design system variables.
-- Create a visual preview of the imported colors and typography.
+1.  In the Figma Desktop App, go to `Plugins` > `Development` > `Import plugin from manifest...`.
+2.  Select the `manifest.json` file located in the **`Design System`** directory.
 
-## What Gets Created
+#### c. Run the Plugin
 
-- **A "Design System" Page:** A dedicated page that houses all the visual elements of your design system.
-- **Variable Collections:** Neatly organized collections for `Colors`, `Typography`, and `Spacing` in the "Local Variables" panel.
-- **Visual Previews:**
-  - **Colors:** A section with all your color variables displayed as swatches.
-  - **Typography:** A section that showcases your font styles and sizes.
+1.  Open any Figma file.
+2.  Go to `Plugins` > `Development` > `Figma Design Variable Importer`.
+3.  The plugin will create a new page named "Design System" and populate it with your variables and visual styles.
 
-This visual representation allows you to instantly verify that your design system has been imported correctly and is ready to use.
+---
+
+## 2. Simple Variable Importer
+
+This plugin is a stripped-down version for users who only need to create and import local variables without the visual preview. It's faster and keeps your Figma file clean.
+
+![Variables Screenshot](https://raw.githubusercontent.com/mjavason/Figma-Design-System-Importer/main/public/variables-screenshot.png)
+
+### Features
+
+-   **Fast Variable Imports:** Quickly creates local variables for colors, typography, and spacing.
+-   **Dynamic Color Shades:** Automatically generates shades for your base colors.
+-   **Lightweight:** No extra pages or visual elements are created.
+
+### How to Use
+
+#### a. Configure Your Design System
+
+Before running the plugin, define your design system properties in the `Variable Import/code.js` file. Modify the configuration variables at the top of the file (`baseColors`, `fontFamily`, `fontSizes`, etc.).
+
+#### b. Install the Plugin in Figma
+
+1.  In the Figma Desktop App, go to `Plugins` > `Development` > `Import plugin from manifest...`.
+2.  Select the `manifest.json` file located in the **`Variable Import`** directory.
+
+#### c. Run the Plugin
+
+1.  Open any Figma file.
+2.  Go to `Plugins` > `Development` > `Simple Variable Importer`.
+3.  The plugin will clear any existing local variables and generate new ones based on your configuration.
