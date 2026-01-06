@@ -1,16 +1,16 @@
 // ==============================================
 // Editable Configuration
 // ==============================================
-
 const baseColors = {
-  primary: '#1C3F3A',
-  secondary: '#EBE9DA',
-  tertiary: '#E0E9E9',
-  black: '#0A0C29',
-  white: '#FFFFFF',
+  cinemaRed: '#E50914',
+  deepBlack: '#141414',
+  pureWhite: '#FFFFFF',
+  goldAccent: '#FFD700',
+  darkGray: '#2F2F2F',
+  lightGray: '#808080',
 };
 
-const fontFamily = 'Roboto';
+const fontFamily = 'Inter';
 
 const fontStyles = [
   { name: 'Regular', weight: 400, style: 'Regular' },
@@ -19,10 +19,12 @@ const fontStyles = [
 ];
 
 const fontSizes = {
+  hero: 64,
   display: 48,
   h1: 36,
-  h2: 24,
-  h3: 18,
+  h2: 28,
+  h3: 24,
+  h4: 20,
   body: 16,
   small: 14,
   caption: 12,
@@ -30,11 +32,13 @@ const fontSizes = {
 };
 
 const spacing = {
+  xs: 4,
   small: 8,
   medium: 16,
   large: 24,
   xlarge: 32,
-  xxlarge: 40,
+  xxlarge: 48,
+  xxxlarge: 64,
 };
 
 // ==============================================
@@ -45,7 +49,10 @@ function generateShades(hex) {
   function hexToRgb(hex) {
     hex = hex.replace('#', '');
     if (hex.length === 3) {
-      hex = hex.split('').map((c) => c + c).join('');
+      hex = hex
+        .split('')
+        .map((c) => c + c)
+        .join('');
     }
     const bigint = parseInt(hex, 16);
     return [(bigint >> 16) & 255, (bigint >> 8) & 255, bigint & 255];
@@ -108,7 +115,11 @@ function createVariableCollection(name) {
 function createColorVariables(collection, namespace, colors, variableMap) {
   for (const [key, value] of Object.entries(colors)) {
     const fullKey = `${namespace}/${key}`;
-    const variable = figma.variables.createVariable(fullKey, collection, 'COLOR');
+    const variable = figma.variables.createVariable(
+      fullKey,
+      collection,
+      'COLOR'
+    );
     variable.setValueForMode(collection.modes[0].modeId, hexToRgb(value));
     variableMap[fullKey] = variable;
   }
@@ -116,13 +127,21 @@ function createColorVariables(collection, namespace, colors, variableMap) {
 
 function createNumberVariables(collection, namespace, values, variableMap) {
   if (typeof values === 'number') {
-    const variable = figma.variables.createVariable(namespace, collection, 'FLOAT');
+    const variable = figma.variables.createVariable(
+      namespace,
+      collection,
+      'FLOAT'
+    );
     variable.setValueForMode(collection.modes[0].modeId, values);
     variableMap[namespace] = variable;
   } else {
     for (const [key, value] of Object.entries(values)) {
       const fullKey = `${namespace}/${key}`;
-      const variable = figma.variables.createVariable(fullKey, collection, 'FLOAT');
+      const variable = figma.variables.createVariable(
+        fullKey,
+        collection,
+        'FLOAT'
+      );
       variable.setValueForMode(collection.modes[0].modeId, value);
       variableMap[fullKey] = variable;
     }
@@ -147,19 +166,30 @@ function createNumberVariables(collection, namespace, values, variableMap) {
 
   const colorCollection = createVariableCollection('Colors');
   for (const [group, shades] of Object.entries(dynamicColors)) {
-    createColorVariables(colorCollection, `color/${group}`, shades, variableMap);
-  }
-
-  const typographyCollection = createVariableCollection('Typography');
-  createNumberVariables(typographyCollection, 'fontSize', fontSizes, variableMap);
-  for (const style of fontStyles) {
-    createNumberVariables(
-      typographyCollection,
-      `fontWeight/${style.name.toLowerCase()}`,
-      style.weight,
+    createColorVariables(
+      colorCollection,
+      `color/${group}`,
+      shades,
       variableMap
     );
   }
+
+  // NOTE: Typography (medium, bold, etc.) variables are unnecessary as Figma comes with built-in text styles.
+  // const typographyCollection = createVariableCollection('Typography');
+  // createNumberVariables(
+  //   typographyCollection,
+  //   'fontSize',
+  //   fontSizes,
+  //   variableMap
+  // );
+  // for (const style of fontStyles) {
+  //   createNumberVariables(
+  //     typographyCollection,
+  //     `fontWeight/${style.name.toLowerCase()}`,
+  //     style.weight,
+  //     variableMap
+  //   );
+  // }
 
   const spacingCollection = createVariableCollection('Spacing');
   createNumberVariables(spacingCollection, 'spacing', spacing, variableMap);
