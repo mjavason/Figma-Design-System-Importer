@@ -77,7 +77,7 @@ function generateShades(hex) {
 
   keys.forEach((key, i) => {
     if (key === 'base') {
-      result[key] = hex;
+      result[key] = hex.startsWith('#') ? hex : `#${hex}`;
     } else {
       const index = i < 5 ? 5 - i : i - 6 + 1;
       const factor = i < 5 ? index * 0.1 : -index * 0.1;
