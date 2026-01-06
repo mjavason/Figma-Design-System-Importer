@@ -10,13 +10,7 @@ const baseColors = {
   lightGray: '#808080',
 };
 
-const fontFamily = 'Inter';
-
-const fontStyles = [
-  { name: 'Regular', weight: 400, style: 'Regular' },
-  { name: 'Medium', weight: 500, style: 'Medium' },
-  { name: 'Bold', weight: 700, style: 'Bold' },
-];
+// const fontFamily = 'Inter'; // If the user has installed the font, it will appear as part of the options in Figma.
 
 const fontSizes = {
   hero: 64,
@@ -173,23 +167,6 @@ function createNumberVariables(collection, namespace, values, variableMap) {
       variableMap
     );
   }
-
-  // NOTE: Typography (medium, bold, etc.) variables are unnecessary as Figma comes with built-in text styles.
-  // const typographyCollection = createVariableCollection('Typography');
-  // createNumberVariables(
-  //   typographyCollection,
-  //   'fontSize',
-  //   fontSizes,
-  //   variableMap
-  // );
-  // for (const style of fontStyles) {
-  //   createNumberVariables(
-  //     typographyCollection,
-  //     `fontWeight/${style.name.toLowerCase()}`,
-  //     style.weight,
-  //     variableMap
-  //   );
-  // }
 
   const spacingCollection = createVariableCollection('Spacing');
   createNumberVariables(spacingCollection, 'spacing', spacing, variableMap);
