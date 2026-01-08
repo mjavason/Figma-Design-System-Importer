@@ -10,7 +10,8 @@ const baseColors = {
   lightGray: '#808080', // Muted Text / Disabled Elements
 };
 
-const fontFamily = 'Inter'; // If the user has installed the font, it will appear as part of the options in Figma.
+// If the user has installed the font, it will appear as part of the options in Figma.
+const fontFamily = 'Inter'; 
 
 const fontSizes = {
   hero: 64,
@@ -31,9 +32,9 @@ const spacing = {
   small: 8,
   medium: 16,
   large: 24,
-  xlarge: 32,
-  xxlarge: 48,
-  xxxlarge: 64,
+  xLarge: 32,
+  xxLarge: 48,
+  xxxLarge: 64,
 };
 
 // ==============================================
