@@ -2,15 +2,15 @@
 // Editable Configuration
 // ==============================================
 const baseColors = {
-  cinemaRed: '#E50914',
-  deepBlack: '#141414',
-  pureWhite: '#FFFFFF',
-  goldAccent: '#FFD700',
-  darkGray: '#2F2F2F',
-  lightGray: '#808080',
+  cinemaRed: '#E50914', // Primary
+  goldAccent: '#FFD700', // Secondary / Accent
+  deepBlack: '#141414', // Background
+  pureWhite: '#FFFFFF', // Text / Foreground
+  darkGray: '#2F2F2F', // Borders / Dividers
+  lightGray: '#808080', // Muted Text / Disabled Elements
 };
 
-// const fontFamily = 'Inter'; // If the user has installed the font, it will appear as part of the options in Figma.
+const fontFamily = 'Inter'; // If the user has installed the font, it will appear as part of the options in Figma.
 
 const fontSizes = {
   hero: 64,
@@ -25,6 +25,7 @@ const fontSizes = {
   tiny: 10,
 };
 
+// Some design systems enforce a spacing scale for better consistency. Something to consider
 const spacing = {
   xs: 4,
   small: 8,
