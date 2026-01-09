@@ -3,15 +3,15 @@
 // ==============================================
 const baseColors = {
   cinemaRed: '#E50914', // Primary
-  goldAccent: '#FFD700', // Secondary / Accent
-  deepBlack: '#141414', // Background
-  pureWhite: '#FFFFFF', // Text / Foreground
-  darkGray: '#2F2F2F', // Borders / Dividers
-  lightGray: '#808080', // Muted Text / Disabled Elements
+  goldAccent: '#FFD700', // Secondary
+  deepBlack: '#141414', // Background Primary | Primary Contrast
+  pureWhite: '#FFFFFF', // Text Primary | Secondary Contrast
+  darkGray: '#2F2F2F', // Borders | Dividers | Background Secondary
+  lightGray: '#808080', // Text Secondary
 };
 
 // If the user has installed the font, it will appear as part of the options in Figma.
-const fontFamily = 'Inter'; 
+const fontFamily = 'Inter';
 
 const fontSizes = {
   hero: 64,
