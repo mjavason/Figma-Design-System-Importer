@@ -22,7 +22,7 @@ function generateShades(hex) {
         .map((x) =>
           Math.max(0, Math.min(255, Math.round(x)))
             .toString(16)
-            .padStart(2, '0')
+            .padStart(2, '0'),
         )
         .join('')
     );
@@ -57,7 +57,19 @@ const baseColors = {
   secondary: '#EBE9DA',
   tertiary: '#E0E9E9',
   black: '#0A0C29',
-  white: '#FFFFFF'
+  white: '#FFFFFF',
+};
+
+const DefaultFigmaFontStyles = {
+  Thin: 'Thin',
+  ExtraLight: 'ExtraLight',
+  Light: 'Light',
+  Regular: 'Regular',
+  Medium: 'Medium',
+  SemiBold: 'SemiBold',
+  Bold: 'Bold',
+  ExtraBold: 'ExtraBold',
+  Black: 'Black',
 };
 
 const dynamicColors = {};
@@ -69,14 +81,29 @@ const config = {
   colors: dynamicColors,
   typography: {
     fontFamily: 'Roboto',
-    fontStyles: [
-      { name: 'Regular', weight: 400, style: 'Regular' },
-      { name: 'Medium', weight: 500, style: 'Medium' },
-      { name: 'Bold', weight: 700, style: 'Bold' },
-    ],
-    fontSizes: [48, 36, 24, 18, 16, 14, 12, 10],
+    fontStyles: Object.keys(DefaultFigmaFontStyles), //set as array if you wish to limit - [DefaultFigmaFontStyles.Regular, DefaultFigmaFontStyles.Medium, DefaultFigmaFontStyles.Bold],
+    fontSizes: {
+      displayLg: 64,
+      displayMd: 60,
+      displaySm: 56,
+
+      headingLg: 52,
+      headingMd: 48,
+      headingSm: 44,
+      headingXs: 40,
+
+      subheadingXl: 36,
+      subheadingLg: 32,
+      subheadingMd: 28,
+      subheadingSm: 24,
+
+      paragraphLg: 20,
+      paragraph: 16,
+
+      label: 12,
+    },
     lineHeightMultiplier: 1.2,
-    sampleText: 'This is sample text',
+    sampleText: 'The quick brown fox jumps over the lazy dog',
   },
   spacing: {
     small: 8,
@@ -123,7 +150,7 @@ function setupUI() {
       };
     </script>
   `,
-    { width: 400, height: 300 }
+    { width: 400, height: 300 },
   );
 }
 
@@ -257,7 +284,7 @@ const createColorVariables = (collection, namespace, colors, variableMap) => {
     const variable = figma.variables.createVariable(
       fullKey,
       collection,
-      'COLOR'
+      'COLOR',
     );
     variable.setValueForMode(collection.modes[0].modeId, hexToRgb(value));
     variableMap[fullKey] = variable;
@@ -282,7 +309,7 @@ const createNumberVariables = (collection, namespace, values, variableMap) => {
     const variable = figma.variables.createVariable(
       `${namespace}`,
       collection,
-      'FLOAT'
+      'FLOAT',
     );
     variable.setValueForMode(collection.modes[0].modeId, values);
     variableMap[namespace] = variable;
@@ -292,7 +319,7 @@ const createNumberVariables = (collection, namespace, values, variableMap) => {
       const variable = figma.variables.createVariable(
         fullKey,
         collection,
-        'FLOAT'
+        'FLOAT',
       );
       variable.setValueForMode(collection.modes[0].modeId, value);
       variableMap[fullKey] = variable;
@@ -311,9 +338,9 @@ async function loadFonts() {
     for (const style of config.typography.fontStyles) {
       await figma.loadFontAsync({
         family: config.typography.fontFamily,
-        style: style.style,
+        style: style,
       });
-      log(`Loaded font: ${config.typography.fontFamily} ${style.style}`);
+      log(`Loaded font: ${config.typography.fontFamily} ${style}`);
     }
   } catch (e) {
     log(`Font loading error: ${e.message}`);
@@ -405,7 +432,7 @@ const createFontWeightsFrame = async (variableMap) => {
   weightsFrame.fills = [];
 
   for (const fontStyle of config.typography.fontStyles) {
-    log(JSON.stringify(fontStyle));
+    log(fontStyle);
     const weightSection = await createWeightSection(fontStyle, variableMap);
     weightsFrame.appendChild(weightSection);
   }
@@ -432,8 +459,7 @@ async function createWeightTitle(fontName, variableMap) {
 
   const weightTitleText = await createSafeText(fontName, {
     fontSize: 14,
-    fontWeight: config.typography.fontStyles.find((s) => s.name === 'Medium')
-      .weight,
+    style: 'Medium',
     fills: variableMap['color/black/base']
       ? [
           {
@@ -485,23 +511,22 @@ async function createWeightTitle(fontName, variableMap) {
  */
 async function createWeightSection(fontStyle, variableMap) {
   const weightSection = figma.createFrame();
-  weightSection.name = fontStyle.name;
+  weightSection.name = fontStyle;
   weightSection.layoutMode = 'VERTICAL';
   weightSection.counterAxisSizingMode = 'AUTO';
   weightSection.primaryAxisSizingMode = 'AUTO';
   weightSection.itemSpacing = config.layout.fontWeightSectionSpacing;
   weightSection.fills = [];
 
-  const titleGroup = await createWeightTitle(fontStyle.name, variableMap);
+  const titleGroup = await createWeightTitle(fontStyle, variableMap);
   weightSection.appendChild(titleGroup);
 
-  for (const fontSize of config.typography.fontSizes) {
+  for (const fontSizeKey of Object.keys(config.typography.fontSizes)) {
+    const fontSize = config.typography.fontSizes[fontSizeKey];
+
     try {
       const text = await createSafeText(config.typography.sampleText, {
-        fontSize: variableMap[`fontSize/${fontSize}`] ? undefined : fontSize,
-        fontWeight: variableMap[`fontWeight/${fontStyle.name.toLowerCase()}`]
-          ? undefined
-          : fontStyle.weight,
+        fontSize: variableMap[`fontSize/${fontSizeKey}`] ? undefined : fontSize,
         lineHeight: {
           value: fontSize * config.typography.lineHeightMultiplier,
           unit: 'PIXELS',
@@ -522,24 +547,22 @@ async function createWeightSection(fontStyle, variableMap) {
           : [{ type: 'SOLID', color: hexToRgb(config.colors.black[900]) }],
       });
 
-      if (variableMap[`fontSize/${fontSize}`]) {
+      if (variableMap[`fontSize/${fontSizeKey}`]) {
         text.setBoundVariable('fontSize', {
           type: 'VARIABLE_ALIAS',
-          id: variableMap[`fontSize/${fontSize}`].id,
+          id: variableMap[`fontSize/${fontSizeKey}`].id,
         });
       }
 
-      if (variableMap[`fontWeight/${fontStyle.name.toLowerCase()}`]) {
-        text.setBoundVariable('fontWeight', {
-          type: 'VARIABLE_ALIAS',
-          id: variableMap[`fontWeight/${fontStyle.name.toLowerCase()}`].id,
-        });
-      }
+      text.fontName = {
+        family: config.typography.fontFamily,
+        style: fontStyle,
+      };
 
       weightSection.appendChild(text);
     } catch (textError) {
       log(
-        `Failed to create text for ${fontStyle.name} at ${fontSize}px: ${textError.message}`
+        `Failed to create text for ${fontStyle} at ${fontSize}px: ${textError.message}`,
       );
     }
   }
@@ -549,7 +572,7 @@ async function createWeightSection(fontStyle, variableMap) {
 
 /**
  * Creates text samples for a font weight
- * @param {object} fontStyle - Font style config
+ * @param {string} fontStyle - Font style config
  * @param {object} variableMap - Map of variables
  * @returns {FrameNode} The text samples frame
  *
@@ -568,13 +591,13 @@ async function createTextSamples(fontStyle, variableMap) {
   textColumn.itemSpacing = config.layout.textSampleSpacing;
   textColumn.fills = [];
 
-  for (const fontSize of config.typography.fontSizes) {
+  for (const fontSizeKey of Object.keys(config.typography.fontSizes)) {
+    const fontSize = config.typography.fontSizes[fontSizeKey];
+
     try {
       const text = await createSafeText(config.typography.sampleText, {
-        fontSize: variableMap[`fontSize/${fontSize}`] ? undefined : fontSize,
-        fontWeight: variableMap[`fontWeight/${fontStyle.name.toLowerCase()}`]
-          ? undefined
-          : fontStyle.weight,
+        fontSize: variableMap[`fontSize/${fontSizeKey}`] ? undefined : fontSize,
+        style: fontStyle,
         lineHeight: {
           value: fontSize * config.typography.lineHeightMultiplier,
           unit: 'PIXELS',
@@ -595,24 +618,22 @@ async function createTextSamples(fontStyle, variableMap) {
           : [{ type: 'SOLID', color: hexToRgb(config.colors.black[900]) }],
       });
 
-      if (variableMap[`fontSize/${fontSize}`]) {
+      if (variableMap[`fontSize/${fontSizeKey}`]) {
         text.setBoundVariable('fontSize', {
           type: 'VARIABLE_ALIAS',
-          id: variableMap[`fontSize/${fontSize}`].id,
+          id: variableMap[`fontSize/${fontSizeKey}`].id,
         });
       }
 
-      if (variableMap[`fontWeight/${fontStyle.name.toLowerCase()}`]) {
-        text.setBoundVariable('fontWeight', {
-          type: 'VARIABLE_ALIAS',
-          id: variableMap[`fontWeight/${fontStyle.name.toLowerCase()}`].id,
-        });
-      }
+      text.fontName = {
+        family: config.typography.fontFamily,
+        style: fontStyle,
+      };
 
       textColumn.appendChild(text);
     } catch (textError) {
       log(
-        `Failed to create text for ${fontStyle.name} at ${fontSize}px: ${textError.message}`
+        `Failed to create text for ${fontStyle} at ${fontSize}px: ${textError.message}`,
       );
     }
   }
@@ -754,27 +775,31 @@ function createAllVariables(variableMap) {
       colorCollection,
       `color/${group}`,
       shades,
-      variableMap
+      variableMap,
     );
   }
 
   const typographyCollection = createVariableCollection('Typography');
-  for (const size of config.typography.fontSizes) {
+  for (const fontSizeKey of Object.keys(config.typography.fontSizes)) {
+    const fontSize = config.typography.fontSizes[fontSizeKey];
+
     createNumberVariables(
       typographyCollection,
-      `fontSize/${size}`,
-      size,
-      variableMap
+      `fontSize/${fontSizeKey}`,
+      fontSize,
+      variableMap,
     );
   }
-  for (const style of config.typography.fontStyles) {
-    createNumberVariables(
-      typographyCollection,
-      `fontWeight/${style.name.toLowerCase()}`,
-      style.weight,
-      variableMap
-    );
-  }
+
+  // This is redundant. Figma already has this by default
+  // for (const style of config.typography.fontStyles) {
+  //   createNumberVariables(
+  //     typographyCollection,
+  //     `fontWeight/${style.name.toLowerCase()}`,
+  //     style.weight,
+  //     variableMap,
+  //   );
+  // }
 
   const spacingCollection = createVariableCollection('Spacing');
   for (const [key, value] of Object.entries(config.spacing)) {
@@ -782,7 +807,7 @@ function createAllVariables(variableMap) {
       spacingCollection,
       `spacing/${key}`,
       value,
-      variableMap
+      variableMap,
     );
   }
 }
