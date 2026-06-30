@@ -459,7 +459,7 @@ async function createWeightTitle(fontName, variableMap) {
 
   const weightTitleText = await createSafeText(fontName, {
     fontSize: 14,
-    style: 'Medium',
+    style: fontName,
     fills: variableMap['color/black/base']
       ? [
           {
