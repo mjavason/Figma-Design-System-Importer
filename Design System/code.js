@@ -79,10 +79,14 @@ for (const key in baseColors) {
 
 const config = {
   colors: dynamicColors,
+
   typography: {
     fontFamily: 'Roboto',
     fontStyles: Object.keys(DefaultFigmaFontStyles), //set as array if you wish to limit - [DefaultFigmaFontStyles.Regular, DefaultFigmaFontStyles.Medium, DefaultFigmaFontStyles.Bold],
     fontSizes: {
+      displayXxxl: 96,
+      displayXxl: 80,
+      displayXl: 72,
       displayLg: 64,
       displayMd: 60,
       displaySm: 56,
@@ -105,13 +109,20 @@ const config = {
     lineHeightMultiplier: 1.2,
     sampleText: 'The quick brown fox jumps over the lazy dog',
   },
+
   spacing: {
     small: 8,
     medium: 16,
     large: 24,
-    xlarge: 32,
-    xxlarge: 40,
+    xLarge: 32,
+    xxLarge: 40,
+    xxxLarge: 48,
+    huge: 64,
+    xxHuge: 80,
+    xxxHuge: 96,
   },
+
+  // mainly used for design system setup
   layout: {
     pagePadding: 40,
     sectionSpacing: 40,
