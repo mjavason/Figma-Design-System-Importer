@@ -72,6 +72,8 @@ const DefaultFigmaFontStyles = {
   Black: 'Black',
 };
 
+const lineHeightMultiplier = 1.2;
+
 const dynamicColors = {};
 for (const key in baseColors) {
   dynamicColors[key] = generateShades(baseColors[key]);
@@ -106,7 +108,9 @@ const config = {
 
       label: 12,
     },
-    lineHeightMultiplier: 1.2,
+    lineHeight: {},
+    lineHeightMultiplier,
+
     sampleText: 'The quick brown fox jumps over the lazy dog',
   },
 
