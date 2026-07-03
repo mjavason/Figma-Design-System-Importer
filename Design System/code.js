@@ -132,27 +132,13 @@ const config = {
       displayXxxl: 112,
     },
     letterSpacing: {
-      label: 0,
-
-      paragraph: 0,
-      paragraphLg: 0,
-
-      subheadingSm: -0.25,
-      subheadingMd: -0.25,
-      subheadingLg: -0.5,
-      subheadingXl: -0.5,
-
-      headingXs: -0.5,
-      headingSm: -0.5,
-      headingMd: -0.5,
-      headingLg: -0.5,
-
-      displaySm: -1,
-      displayMd: -1,
-      displayLg: -1.25,
-      displayXl: -1.5,
-      displayXxl: -1.5,
-      displayXxxl: -2,
+      base: 0,
+      tiny: -0.25,
+      small: -0.5,
+      large: -1,
+      xLarge: -1.25,
+      xxLarge: -1.5,
+      xxxLarge: -2,
     },
     lineHeightMultiplier,
 
