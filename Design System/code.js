@@ -86,35 +86,81 @@ const config = {
     fontFamily: 'Roboto',
     fontStyles: Object.keys(DefaultFigmaFontStyles), //set as array if you wish to limit - [DefaultFigmaFontStyles.Regular, DefaultFigmaFontStyles.Medium, DefaultFigmaFontStyles.Bold],
     fontSizes: {
-      displayXxxl: 96,
-      displayXxl: 80,
-      displayXl: 72,
-      displayLg: 64,
-      displayMd: 60,
-      displaySm: 56,
-
-      headingLg: 52,
-      headingMd: 48,
-      headingSm: 44,
-      headingXs: 40,
-
-      subheadingXl: 36,
-      subheadingLg: 32,
-      subheadingMd: 28,
-      subheadingSm: 24,
-
-      paragraphLg: 20,
-      paragraph: 16,
-
       label: 12,
+
+      paragraph: 16,
+      paragraphLg: 20,
+
+      subheadingSm: 24,
+      subheadingMd: 28,
+      subheadingLg: 32,
+      subheadingXl: 36,
+
+      headingXs: 40,
+      headingSm: 44,
+      headingMd: 48,
+      headingLg: 52,
+
+      displaySm: 56,
+      displayMd: 60,
+      displayLg: 64,
+      displayXl: 72,
+      displayXxl: 80,
+      displayXxxl: 96,
     },
-    lineHeight: {},
+    lineHeights: {
+      label: 16,
+
+      paragraph: 24,
+      paragraphLg: 32,
+
+      subheadingSm: 32,
+      subheadingMd: 40,
+      subheadingLg: 40,
+      subheadingXl: 48,
+
+      headingXs: 48,
+      headingSm: 56,
+      headingMd: 56,
+      headingLg: 64,
+
+      displaySm: 72,
+      displayMd: 72,
+      displayLg: 80,
+      displayXl: 88,
+      displayXxl: 96,
+      displayXxxl: 112,
+    },
+    letterSpacing: {
+      label: 0,
+
+      paragraph: 0,
+      paragraphLg: 0,
+
+      subheadingSm: -0.25,
+      subheadingMd: -0.25,
+      subheadingLg: -0.5,
+      subheadingXl: -0.5,
+
+      headingXs: -0.5,
+      headingSm: -0.5,
+      headingMd: -0.5,
+      headingLg: -0.5,
+
+      displaySm: -1,
+      displayMd: -1,
+      displayLg: -1.25,
+      displayXl: -1.5,
+      displayXxl: -1.5,
+      displayXxxl: -2,
+    },
     lineHeightMultiplier,
 
     sampleText: 'The quick brown fox jumps over the lazy dog',
   },
 
   spacing: {
+    tiny: 4,
     small: 8,
     medium: 16,
     large: 24,
@@ -806,15 +852,27 @@ function createAllVariables(variableMap) {
     );
   }
 
-  // This is redundant. Figma already has this by default
-  // for (const style of config.typography.fontStyles) {
-  //   createNumberVariables(
-  //     typographyCollection,
-  //     `fontWeight/${style.name.toLowerCase()}`,
-  //     style.weight,
-  //     variableMap,
-  //   );
-  // }
+  for (const lineHeightKey of Object.keys(config.typography.lineHeights)) {
+    const lineHeight = config.typography.lineHeights[lineHeightKey];
+
+    createNumberVariables(
+      typographyCollection,
+      `lineHeight/${lineHeightKey}`,
+      lineHeight,
+      variableMap,
+    );
+  }
+
+  for (const letterSpacingKey of Object.keys(config.typography.letterSpacing)) {
+    const letterSpacing = config.typography.letterSpacing[letterSpacingKey];
+
+    createNumberVariables(
+      typographyCollection,
+      `letterSpacing/${letterSpacingKey}`,
+      letterSpacing,
+      variableMap,
+    );
+  }
 
   const spacingCollection = createVariableCollection('Spacing');
   for (const [key, value] of Object.entries(config.spacing)) {
