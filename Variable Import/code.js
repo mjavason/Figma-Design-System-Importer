@@ -14,27 +14,75 @@ const baseColors = {
 const fontFamily = 'Inter';
 
 const fontSizes = {
-  hero: 64,
-  display: 48,
-  h1: 36,
-  h2: 28,
-  h3: 24,
-  h4: 20,
-  body: 16,
-  small: 14,
-  caption: 12,
-  tiny: 10,
+  label: 12,
+
+  paragraph: 16,
+  paragraphLg: 20,
+
+  subheadingSm: 24,
+  subheadingMd: 28,
+  subheadingLg: 32,
+  subheadingXl: 36,
+
+  headingXs: 40,
+  headingSm: 44,
+  headingMd: 48,
+  headingLg: 52,
+
+  displaySm: 56,
+  displayMd: 60,
+  displayLg: 64,
+  displayXl: 72,
+  displayXxl: 80,
+  displayXxxl: 96,
+};
+
+const lineHeights = {
+  label: 16,
+
+  paragraph: 24,
+  paragraphLg: 32,
+
+  subheadingSm: 32,
+  subheadingMd: 40,
+  subheadingLg: 40,
+  subheadingXl: 48,
+
+  headingXs: 48,
+  headingSm: 56,
+  headingMd: 56,
+  headingLg: 64,
+
+  displaySm: 72,
+  displayMd: 72,
+  displayLg: 80,
+  displayXl: 88,
+  displayXxl: 96,
+  displayXxxl: 112,
+};
+
+const letterSpacing = {
+  base: 0,
+  tiny: -0.25,
+  small: -0.5,
+  large: -1,
+  xLarge: -1.25,
+  xxLarge: -1.5,
+  xxxLarge: -2,
 };
 
 // Some design systems enforce a spacing scale for better consistency. Something to consider
 const spacing = {
-  xs: 4,
+  tiny: 4,
   small: 8,
   medium: 16,
   large: 24,
   xLarge: 32,
-  xxLarge: 48,
-  xxxLarge: 64,
+  xxLarge: 40,
+  xxxLarge: 48,
+  huge: 64,
+  xxHuge: 80,
+  xxxHuge: 96,
 };
 
 // ==============================================
@@ -61,7 +109,7 @@ function generateShades(hex) {
         .map((x) =>
           Math.max(0, Math.min(255, Math.round(x)))
             .toString(16)
-            .padStart(2, '0')
+            .padStart(2, '0'),
         )
         .join('')
     );
@@ -114,7 +162,7 @@ function createColorVariables(collection, namespace, colors, variableMap) {
     const variable = figma.variables.createVariable(
       fullKey,
       collection,
-      'COLOR'
+      'COLOR',
     );
     variable.setValueForMode(collection.modes[0].modeId, hexToRgb(value));
     variableMap[fullKey] = variable;
@@ -126,7 +174,7 @@ function createNumberVariables(collection, namespace, values, variableMap) {
     const variable = figma.variables.createVariable(
       namespace,
       collection,
-      'FLOAT'
+      'FLOAT',
     );
     variable.setValueForMode(collection.modes[0].modeId, values);
     variableMap[namespace] = variable;
@@ -136,7 +184,7 @@ function createNumberVariables(collection, namespace, values, variableMap) {
       const variable = figma.variables.createVariable(
         fullKey,
         collection,
-        'FLOAT'
+        'FLOAT',
       );
       variable.setValueForMode(collection.modes[0].modeId, value);
       variableMap[fullKey] = variable;
@@ -160,18 +208,31 @@ function createNumberVariables(collection, namespace, values, variableMap) {
     dynamicColors[key] = generateShades(baseColors[key]);
   }
 
+  // Colors Collection
   const colorCollection = createVariableCollection('Colors');
   for (const [group, shades] of Object.entries(dynamicColors)) {
     createColorVariables(
       colorCollection,
       `color/${group}`,
       shades,
-      variableMap
+      variableMap,
     );
   }
 
+  // Spacing Collection
   const spacingCollection = createVariableCollection('Spacing');
   createNumberVariables(spacingCollection, 'spacing', spacing, variableMap);
+
+  // Typography Collection
+  const fontCollection = createVariableCollection('Typography');
+  createNumberVariables(fontCollection, 'fontSize', fontSizes, variableMap);
+  createNumberVariables(fontCollection, 'lineHeight', lineHeights, variableMap);
+  createNumberVariables(
+    fontCollection,
+    'letterSpacing',
+    letterSpacing,
+    variableMap,
+  );
 
   figma.closePlugin('Variables created.');
 })();
