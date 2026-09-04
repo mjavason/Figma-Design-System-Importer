@@ -12,53 +12,107 @@ const baseColors = {
 
 // If the user has installed the font, it will appear as part of the options in Figma.
 const fontFamily = 'Inter';
-
 const fontSizes = {
-  label: 12,
-
-  paragraph: 16,
-  paragraphLg: 20,
-
-  subheadingSm: 24,
-  subheadingMd: 28,
-  subheadingLg: 32,
-  subheadingXl: 36,
-
-  headingXs: 40,
-  headingSm: 44,
-  headingMd: 48,
-  headingLg: 52,
-
-  displaySm: 56,
-  displayMd: 60,
-  displayLg: 64,
-  displayXl: 72,
-  displayXxl: 80,
-  displayXxxl: 96,
-};
-
-const lineHeights = {
-  label: 16,
-
-  paragraph: 24,
-  paragraphLg: 32,
-
-  subheadingSm: 32,
-  subheadingMd: 40,
-  subheadingLg: 40,
-  subheadingXl: 48,
-
-  headingXs: 48,
-  headingSm: 56,
-  headingMd: 56,
-  headingLg: 64,
-
-  displaySm: 72,
-  displayMd: 72,
-  displayLg: 80,
-  displayXl: 88,
-  displayXxl: 96,
-  displayXxxl: 112,
+  x1: 4,
+  x2: 8,
+  x3: 12,
+  x4: 16,
+  x5: 20,
+  x6: 24,
+  x7: 28,
+  x8: 32,
+  x9: 36,
+  x10: 40,
+  x11: 44,
+  x12: 48,
+  x13: 52,
+  x14: 56,
+  x15: 60,
+  x16: 64,
+  x17: 68,
+  x18: 72,
+  x19: 76,
+  x20: 80,
+  x21: 84,
+  x22: 88,
+  x23: 92,
+  x24: 96,
+  x25: 100,
+  x26: 104,
+  x27: 108,
+  x28: 112,
+  x29: 116,
+  x30: 120,
+  x31: 124,
+  x32: 128,
+  x33: 132,
+  x34: 136,
+  x35: 140,
+  x36: 144,
+  x37: 148,
+  x38: 152,
+  x39: 156,
+  x40: 160,
+  x41: 164,
+  x42: 168,
+  x43: 172,
+  x44: 176,
+  x45: 180,
+  x46: 184,
+  x47: 188,
+  x48: 192,
+  x49: 196,
+  x50: 200,
+  x51: 204,
+  x52: 208,
+  x53: 212,
+  x54: 216,
+  x55: 220,
+  x56: 224,
+  x57: 228,
+  x58: 232,
+  x59: 236,
+  x60: 240,
+  x61: 244,
+  x62: 248,
+  x63: 252,
+  x64: 256,
+  x65: 260,
+  x66: 264,
+  x67: 268,
+  x68: 272,
+  x69: 276,
+  x70: 280,
+  x71: 284,
+  x72: 288,
+  x73: 292,
+  x74: 296,
+  x75: 300,
+  x76: 304,
+  x77: 308,
+  x78: 312,
+  x79: 316,
+  x80: 320,
+  x81: 324,
+  x82: 328,
+  x83: 332,
+  x84: 336,
+  x85: 340,
+  x86: 344,
+  x87: 348,
+  x88: 352,
+  x89: 356,
+  x90: 360,
+  x91: 364,
+  x92: 368,
+  x93: 372,
+  x94: 376,
+  x95: 380,
+  x96: 384,
+  x97: 388,
+  x98: 392,
+  x99: 396,
+  x100: 400,
 };
 
 const letterSpacing = {
@@ -69,20 +123,6 @@ const letterSpacing = {
   xLarge: -1.25,
   xxLarge: -1.5,
   xxxLarge: -2,
-};
-
-// Some design systems enforce a spacing scale for better consistency. Something to consider
-const spacing = {
-  tiny: 4,
-  small: 8,
-  medium: 16,
-  large: 24,
-  xLarge: 32,
-  xxLarge: 40,
-  xxxLarge: 48,
-  huge: 64,
-  xxHuge: 80,
-  xxxHuge: 96,
 };
 
 // ==============================================
@@ -208,7 +248,6 @@ function createNumberVariables(collection, namespace, values, variableMap) {
     dynamicColors[key] = generateShades(baseColors[key]);
   }
 
-  // Colors Collection
   const colorCollection = createVariableCollection('Colors');
   for (const [group, shades] of Object.entries(dynamicColors)) {
     createColorVariables(
@@ -219,14 +258,10 @@ function createNumberVariables(collection, namespace, values, variableMap) {
     );
   }
 
-  // Spacing Collection
-  const spacingCollection = createVariableCollection('Spacing');
-  createNumberVariables(spacingCollection, 'spacing', spacing, variableMap);
-
   // Typography Collection
   const fontCollection = createVariableCollection('Typography');
+
   createNumberVariables(fontCollection, 'fontSize', fontSizes, variableMap);
-  createNumberVariables(fontCollection, 'lineHeight', lineHeights, variableMap);
   createNumberVariables(
     fontCollection,
     'letterSpacing',
