@@ -1,13 +1,59 @@
 // ==============================================
 // Editable Configuration
 // ==============================================
+
+const colors = {
+  black: '#141414',
+  white: '#FFFFFF',
+  red: '#E50914',
+  gold: '#FFD700',
+  gray: '#2F2F2F',
+  muted: '#808080',
+};
+
 const baseColors = {
-  cinemaRed: '#E50914', // Primary
-  goldAccent: '#FFD700', // Secondary
-  deepBlack: '#141414', // Background Primary | Primary Contrast
-  pureWhite: '#FFFFFF', // Text Primary | Secondary Contrast
-  darkGray: '#2F2F2F', // Borders | Dividers | Background Secondary
-  lightGray: '#808080', // Text Secondary
+  background: colors.black,
+  foreground: colors.white,
+
+  card: colors.gray,
+  cardForeground: colors.white,
+
+  popover: colors.gray,
+  popoverForeground: colors.white,
+
+  primary: colors.red,
+  primaryForeground: colors.white,
+
+  secondary: colors.gold,
+  secondaryForeground: colors.black,
+
+  muted: colors.gray,
+  mutedForeground: colors.muted,
+
+  accent: colors.gold,
+  accentForeground: colors.black,
+
+  destructive: colors.red,
+  destructiveForeground: colors.white,
+
+  border: colors.gray,
+  input: colors.gray,
+  ring: colors.red,
+
+  chart1: colors.red,
+  chart2: colors.gold,
+  chart3: colors.muted,
+  chart4: colors.white,
+  chart5: colors.gray,
+
+  sidebar: colors.black,
+  sidebarForeground: colors.white,
+  sidebarPrimary: colors.red,
+  sidebarPrimaryForeground: colors.white,
+  sidebarAccent: colors.gold,
+  sidebarAccentForeground: colors.black,
+  sidebarBorder: colors.gray,
+  sidebarRing: colors.red,
 };
 
 // If the user has installed the font, it will appear as part of the options in Figma.
@@ -237,30 +283,19 @@ function createNumberVariables(collection, namespace, values, variableMap) {
 // ==============================================
 
 (function run() {
+  // Clear existing variable collections
   for (const collection of figma.variables.getLocalVariableCollections()) {
     collection.remove();
   }
 
   const variableMap = {};
 
-  const dynamicColors = {};
-  for (const key in baseColors) {
-    dynamicColors[key] = generateShades(baseColors[key]);
-  }
-
+  // Color Collection
   const colorCollection = createVariableCollection('Colors');
-  for (const [group, shades] of Object.entries(dynamicColors)) {
-    createColorVariables(
-      colorCollection,
-      `color/${group}`,
-      shades,
-      variableMap,
-    );
-  }
+  createColorVariables(colorCollection, 'colors', baseColors, variableMap);
 
   // Typography Collection
   const fontCollection = createVariableCollection('Typography');
-
   createNumberVariables(fontCollection, 'fontSize', fontSizes, variableMap);
   createNumberVariables(
     fontCollection,
