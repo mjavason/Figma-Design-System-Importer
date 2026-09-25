@@ -5,14 +5,14 @@
 const colors = {
   black: '#141414',
   white: '#FFFFFF',
-  red: '#E50914',
-  gold: '#FFD700',
+  primary: '#E50914',
+  secondary: '#FFD700',
   gray: '#2F2F2F',
   muted: '#808080',
 };
 
 const baseColors = {
-  background: colors.black,
+  background: colors.black, 
   foreground: colors.white,
 
   card: colors.gray,
@@ -21,39 +21,39 @@ const baseColors = {
   popover: colors.gray,
   popoverForeground: colors.white,
 
-  primary: colors.red,
+  primary: colors.primary,
   primaryForeground: colors.white,
 
-  secondary: colors.gold,
+  secondary: colors.secondary,
   secondaryForeground: colors.black,
 
   muted: colors.gray,
   mutedForeground: colors.muted,
 
-  accent: colors.gold,
+  accent: colors.secondary,
   accentForeground: colors.black,
 
-  destructive: colors.red,
+  destructive: colors.primary,
   destructiveForeground: colors.white,
 
   border: colors.gray,
   input: colors.gray,
-  ring: colors.red,
+  ring: colors.primary,
 
-  chart1: colors.red,
-  chart2: colors.gold,
+  chart1: colors.primary,
+  chart2: colors.secondary,
   chart3: colors.muted,
   chart4: colors.white,
   chart5: colors.gray,
 
   sidebar: colors.black,
   sidebarForeground: colors.white,
-  sidebarPrimary: colors.red,
+  sidebarPrimary: colors.primary,
   sidebarPrimaryForeground: colors.white,
-  sidebarAccent: colors.gold,
+  sidebarAccent: colors.secondary,
   sidebarAccentForeground: colors.black,
   sidebarBorder: colors.gray,
-  sidebarRing: colors.red,
+  sidebarRing: colors.primary,
 };
 
 // If the user has installed the font, it will appear as part of the options in Figma.

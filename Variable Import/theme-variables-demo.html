@@ -1,0 +1,511 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shadcn Theme Variables Demo</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            background: "var(--background)",
+            foreground: "var(--foreground)",
+            card: "var(--card)",
+            "card-foreground": "var(--card-foreground)",
+            popover: "var(--popover)",
+            "popover-foreground": "var(--popover-foreground)",
+            primary: "var(--primary)",
+            "primary-foreground": "var(--primary-foreground)",
+            secondary: "var(--secondary)",
+            "secondary-foreground": "var(--secondary-foreground)",
+            muted: "var(--muted)",
+            "muted-foreground": "var(--muted-foreground)",
+            accent: "var(--accent)",
+            "accent-foreground": "var(--accent-foreground)",
+            destructive: "var(--destructive)",
+            "destructive-foreground": "var(--destructive-foreground)",
+            border: "var(--border)",
+            input: "var(--input)",
+            ring: "var(--ring)",
+            chart1: "var(--chart-1)",
+            chart2: "var(--chart-2)",
+            chart3: "var(--chart-3)",
+            chart4: "var(--chart-4)",
+            chart5: "var(--chart-5)",
+            sidebar: "var(--sidebar)",
+            "sidebar-foreground": "var(--sidebar-foreground)",
+            "sidebar-primary": "var(--sidebar-primary)",
+            "sidebar-primary-foreground": "var(--sidebar-primary-foreground)",
+            "sidebar-accent": "var(--sidebar-accent)",
+            "sidebar-accent-foreground": "var(--sidebar-accent-foreground)",
+            "sidebar-border": "var(--sidebar-border)",
+            "sidebar-ring": "var(--sidebar-ring)"
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    /* :root {
+      --background: #141414;
+      --foreground: #ffffff;
+      --card: #2f2f2f;
+      --card-foreground: #ffffff;
+      --popover: #2f2f2f;
+      --popover-foreground: #ffffff;
+      --primary: #e50914;
+      --primary-foreground: #ffffff;
+      --secondary: #ffd700;
+      --secondary-foreground: #141414;
+      --muted: #2f2f2f;
+      --muted-foreground: #808080;
+      --accent: #ffd700;
+      --accent-foreground: #141414;
+      --destructive: #e50914;
+      --destructive-foreground: #ffffff;
+      --border: #2f2f2f;
+      --input: #2f2f2f;
+      --ring: #e50914;
+      --chart-1: #e50914;
+      --chart-2: #ffd700;
+      --chart-3: #808080;
+      --chart-4: #ffffff;
+      --chart-5: #2f2f2f;
+      --sidebar: #141414;
+      --sidebar-foreground: #ffffff;
+      --sidebar-primary: #e50914;
+      --sidebar-primary-foreground: #ffffff;
+      --sidebar-accent: #ffd700;
+      --sidebar-accent-foreground: #141414;
+      --sidebar-border: #2f2f2f;
+      --sidebar-ring: #e50914;
+    } */
+
+    :root {
+      --background: #0F172A;
+      --foreground: #F8FAFC;
+
+      --card: #1E293B;
+      --card-foreground: #F8FAFC;
+
+      --popover: #1E293B;
+      --popover-foreground: #F8FAFC;
+
+      --primary: #6366F1;
+      --primary-foreground: #FFFFFF;
+
+      --secondary: #22D3EE;
+      --secondary-foreground: #0F172A;
+
+      --muted: #334155;
+      --muted-foreground: #94A3B8;
+
+      --accent: #22D3EE;
+      --accent-foreground: #0F172A;
+
+      --destructive: #F43F5E;
+      --destructive-foreground: #FFFFFF;
+
+      --border: #334155;
+      --input: #334155;
+      --ring: #6366F1;
+
+      --chart-1: #6366F1;
+      --chart-2: #22D3EE;
+      --chart-3: #A78BFA;
+      --chart-4: #F8FAFC;
+      --chart-5: #64748B;
+
+      --sidebar: #0B1120;
+      --sidebar-foreground: #F8FAFC;
+      --sidebar-primary: #6366F1;
+      --sidebar-primary-foreground: #FFFFFF;
+      --sidebar-accent: #22D3EE;
+      --sidebar-accent-foreground: #0F172A;
+      --sidebar-border: #1E293B;
+      --sidebar-ring: #6366F1;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--background);
+      color: var(--foreground);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    button,
+    input,
+    textarea,
+    select {
+      font: inherit;
+    }
+
+    .ring-demo:focus {
+      outline: 2px solid var(--ring);
+      outline-offset: 2px;
+    }
+
+    .chart-bar {
+      height: 120px;
+      display: flex;
+      align-items: end;
+      gap: 8px;
+    }
+
+    .chart-bar span {
+      flex: 1;
+      border-radius: 4px 4px 0 0;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="min-h-screen">
+    <header class="border-b border-border bg-background px-6 py-5">
+      <div class="mx-auto max-w-7xl">
+        <p class="text-sm font-medium text-muted-foreground">SHADCN THEME TOKENS</p>
+        <h1 class="mt-1 text-3xl font-bold">Theme Variables Demo</h1>
+        <p class="mt-2 max-w-3xl text-muted-foreground">
+          Every variable from the supplied theme is applied to at least one visible UI element.
+        </p>
+      </div>
+    </header>
+
+    <main class="mx-auto max-w-7xl space-y-8 p-6">
+
+      <!-- Core semantic colors -->
+      <section class="space-y-4">
+        <div>
+          <h2 class="text-xl font-semibold">Core semantic tokens</h2>
+          <p class="text-sm text-muted-foreground">Background, foreground, card, popover, primary, secondary, muted,
+            accent, destructive, border, input and ring.</p>
+        </div>
+
+        <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div class="rounded-xl border border-border bg-card p-5 text-card-foreground shadow-sm">
+            <p class="text-sm text-muted-foreground">Card</p>
+            <h3 class="mt-1 text-lg font-semibold">Card surface</h3>
+            <p class="mt-2 text-sm">Uses card + card-foreground.</p>
+          </div>
+
+          <div class="rounded-xl border border-border bg-popover p-5 text-popover-foreground shadow-sm">
+            <p class="text-sm text-muted-foreground">Popover</p>
+            <h3 class="mt-1 text-lg font-semibold">Popover surface</h3>
+            <p class="mt-2 text-sm">Uses popover + popover-foreground.</p>
+          </div>
+
+          <div class="rounded-xl border border-border bg-primary p-5 text-primary-foreground shadow-sm">
+            <p class="text-sm opacity-80">Primary</p>
+            <h3 class="mt-1 text-lg font-semibold">Primary action</h3>
+            <p class="mt-2 text-sm opacity-90">Uses primary + primary-foreground.</p>
+          </div>
+
+          <div class="rounded-xl border border-border bg-secondary p-5 text-secondary-foreground shadow-sm">
+            <p class="text-sm opacity-80">Secondary</p>
+            <h3 class="mt-1 text-lg font-semibold">Secondary action</h3>
+            <p class="mt-2 text-sm opacity-90">Uses secondary + secondary-foreground.</p>
+          </div>
+
+          <div class="rounded-xl border border-border bg-muted p-5 text-muted-foreground">
+            <p class="text-sm">Muted</p>
+            <h3 class="mt-1 text-lg font-semibold text-foreground">Muted surface</h3>
+            <p class="mt-2 text-sm">Uses muted + muted-foreground.</p>
+          </div>
+
+          <div class="rounded-xl border border-border bg-accent p-5 text-accent-foreground">
+            <p class="text-sm opacity-80">Accent</p>
+            <h3 class="mt-1 text-lg font-semibold">Accent surface</h3>
+            <p class="mt-2 text-sm">Uses accent + accent-foreground.</p>
+          </div>
+
+          <div class="rounded-xl border border-border bg-destructive p-5 text-destructive-foreground">
+            <p class="text-sm opacity-80">Destructive</p>
+            <h3 class="mt-1 text-lg font-semibold">Delete action</h3>
+            <p class="mt-2 text-sm">Uses destructive + destructive-foreground.</p>
+          </div>
+
+          <div class="rounded-xl border border-border bg-background p-5">
+            <p class="text-sm text-muted-foreground">Border + Ring</p>
+            <div class="mt-3 flex gap-3">
+              <button class="ring-demo rounded-lg border border-border bg-card px-4 py-2 text-sm">
+                Focus me
+              </button>
+              <div class="flex items-center rounded-lg border border-input bg-background px-4 text-sm">
+                Input token
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Buttons -->
+      <section class="rounded-xl border border-border bg-card p-6 text-card-foreground">
+        <h2 class="text-xl font-semibold">Buttons</h2>
+        <div class="mt-4 flex flex-wrap gap-3">
+          <button class="rounded-lg bg-primary px-4 py-2 font-medium text-primary-foreground">Primary</button>
+          <button class="rounded-lg bg-secondary px-4 py-2 font-medium text-secondary-foreground">Secondary</button>
+          <button class="rounded-lg bg-muted px-4 py-2 font-medium text-foreground">Muted</button>
+          <button class="rounded-lg bg-accent px-4 py-2 font-medium text-accent-foreground">Accent</button>
+          <button class="rounded-lg bg-destructive px-4 py-2 font-medium text-destructive-foreground">Delete</button>
+          <button
+            class="rounded-lg border border-border bg-background px-4 py-2 font-medium text-foreground">Outline</button>
+        </div>
+      </section>
+
+      <!-- Form -->
+      <section class="grid gap-6 lg:grid-cols-2">
+        <div class="rounded-xl border border-border bg-card p-6 text-card-foreground">
+          <h2 class="text-xl font-semibold">Form controls</h2>
+          <div class="mt-5 space-y-4">
+            <div>
+              <label class="mb-2 block text-sm font-medium">Input</label>
+              <input
+                class="ring-demo w-full rounded-lg border border-input bg-background px-3 py-2 text-foreground placeholder:text-muted-foreground"
+                placeholder="Enter something..." />
+            </div>
+            <div>
+              <label class="mb-2 block text-sm font-medium">Textarea</label>
+              <textarea
+                class="ring-demo min-h-24 w-full rounded-lg border border-input bg-background px-3 py-2 text-foreground placeholder:text-muted-foreground"
+                placeholder="Write a message..."></textarea>
+            </div>
+            <div>
+              <label class="mb-2 block text-sm font-medium">Select</label>
+              <select class="ring-demo w-full rounded-lg border border-input bg-background px-3 py-2 text-foreground">
+                <option>Option one</option>
+                <option>Option two</option>
+                <option>Option three</option>
+              </select>
+            </div>
+            <label class="flex items-center gap-3 text-sm">
+              <input type="checkbox" checked class="h-4 w-4 accent-[var(--primary)]" />
+              Remember me
+            </label>
+          </div>
+        </div>
+
+        <div class="space-y-6">
+          <div class="rounded-xl border border-border bg-popover p-6 text-popover-foreground">
+            <h2 class="text-xl font-semibold">Popover / dropdown</h2>
+            <div class="mt-4 w-64 rounded-lg border border-border bg-popover p-2 shadow-xl">
+              <button
+                class="w-full rounded-md px-3 py-2 text-left hover:bg-accent hover:text-accent-foreground">Profile</button>
+              <button
+                class="w-full rounded-md px-3 py-2 text-left hover:bg-accent hover:text-accent-foreground">Settings</button>
+              <button
+                class="w-full rounded-md px-3 py-2 text-left hover:bg-accent hover:text-accent-foreground">Billing</button>
+              <div class="my-2 border-t border-border"></div>
+              <button class="w-full rounded-md px-3 py-2 text-left text-destructive">Delete account</button>
+            </div>
+          </div>
+
+          <div class="rounded-xl border border-destructive bg-destructive/10 p-5">
+            <p class="font-semibold text-destructive">Destructive state</p>
+            <p class="mt-1 text-sm text-muted-foreground">The destructive token is used for dangerous actions and
+              errors.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Charts -->
+      <section class="space-y-4">
+        <div>
+          <h2 class="text-xl font-semibold">Chart tokens</h2>
+          <p class="text-sm text-muted-foreground">Each chart variable is deliberately represented.</p>
+        </div>
+
+        <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
+          <div class="rounded-xl border border-border bg-card p-4">
+            <p class="mb-4 text-sm font-medium text-card-foreground">Chart 1</p>
+            <div class="chart-bar">
+              <span class="bg-chart1" style="height:45%"></span>
+              <span class="bg-chart1" style="height:65%"></span>
+              <span class="bg-chart1" style="height:80%"></span>
+              <span class="bg-chart1" style="height:55%"></span>
+              <span class="bg-chart1" style="height:90%"></span>
+            </div>
+          </div>
+
+          <div class="rounded-xl border border-border bg-card p-4">
+            <p class="mb-4 text-sm font-medium text-card-foreground">Chart 2</p>
+            <div class="chart-bar">
+              <span class="bg-chart2" style="height:35%"></span>
+              <span class="bg-chart2" style="height:60%"></span>
+              <span class="bg-chart2" style="height:75%"></span>
+              <span class="bg-chart2" style="height:55%"></span>
+              <span class="bg-chart2" style="height:85%"></span>
+            </div>
+          </div>
+
+          <div class="rounded-xl border border-border bg-card p-4">
+            <p class="mb-4 text-sm font-medium text-card-foreground">Chart 3</p>
+            <div class="chart-bar">
+              <span class="bg-chart3" style="height:55%"></span>
+              <span class="bg-chart3" style="height:40%"></span>
+              <span class="bg-chart3" style="height:70%"></span>
+              <span class="bg-chart3" style="height:50%"></span>
+              <span class="bg-chart3" style="height:80%"></span>
+            </div>
+          </div>
+
+          <div class="rounded-xl border border-border bg-card p-4">
+            <p class="mb-4 text-sm font-medium text-card-foreground">Chart 4</p>
+            <div class="chart-bar">
+              <span class="bg-chart4" style="height:30%"></span>
+              <span class="bg-chart4" style="height:50%"></span>
+              <span class="bg-chart4" style="height:65%"></span>
+              <span class="bg-chart4" style="height:45%"></span>
+              <span class="bg-chart4" style="height:75%"></span>
+            </div>
+          </div>
+
+          <div class="rounded-xl border border-border bg-card p-4">
+            <p class="mb-4 text-sm font-medium text-card-foreground">Chart 5</p>
+            <div class="chart-bar">
+              <span class="bg-chart5" style="height:25%"></span>
+              <span class="bg-chart5" style="height:45%"></span>
+              <span class="bg-chart5" style="height:35%"></span>
+              <span class="bg-chart5" style="height:65%"></span>
+              <span class="bg-chart5" style="height:55%"></span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Sidebar -->
+      <section class="overflow-hidden rounded-xl border border-sidebar-border bg-sidebar text-sidebar-foreground">
+        <div class="grid min-h-96 lg:grid-cols-[240px_1fr]">
+          <aside class="border-r border-sidebar-border p-4">
+            <p class="mb-5 px-3 text-lg font-bold">Application</p>
+
+            <nav class="space-y-1">
+              <a href="#"
+                class="block rounded-lg bg-sidebar-primary px-3 py-2 font-medium text-sidebar-primary-foreground">Dashboard</a>
+              <a href="#"
+                class="block rounded-lg px-3 py-2 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">Analytics</a>
+              <a href="#"
+                class="block rounded-lg px-3 py-2 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">Users</a>
+              <a href="#"
+                class="block rounded-lg px-3 py-2 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">Settings</a>
+            </nav>
+
+            <div class="mt-6 border-t border-sidebar-border pt-4">
+              <button
+                class="w-full rounded-lg px-3 py-2 text-left hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+                Sign out
+              </button>
+            </div>
+          </aside>
+
+          <div class="bg-background p-6">
+            <h2 class="text-xl font-semibold">Sidebar token demonstration</h2>
+            <p class="mt-2 text-muted-foreground">
+              The navigation on the left uses every sidebar variable.
+            </p>
+
+            <div class="mt-6 grid gap-4 sm:grid-cols-2">
+              <div class="rounded-lg border border-sidebar-border bg-sidebar p-4 text-sidebar-foreground">
+                <p class="text-sm">sidebar</p>
+                <p class="mt-1 font-semibold">#141414</p>
+              </div>
+              <div class="rounded-lg border border-sidebar-border bg-sidebar p-4 text-sidebar-foreground">
+                <p class="text-sm">sidebar-border</p>
+                <p class="mt-1 font-semibold">#2F2F2F</p>
+              </div>
+              <button class="rounded-lg bg-sidebar-primary p-4 text-left text-sidebar-primary-foreground">
+                <p class="text-sm">sidebar-primary</p>
+                <p class="mt-1 font-semibold">Active navigation</p>
+              </button>
+              <button class="rounded-lg bg-sidebar-accent p-4 text-left text-sidebar-accent-foreground">
+                <p class="text-sm">sidebar-accent</p>
+                <p class="mt-1 font-semibold">Hover navigation</p>
+              </button>
+              <div class="rounded-lg border border-sidebar-border p-4">
+                <p class="text-sm text-sidebar-foreground">sidebar-foreground</p>
+                <p class="mt-1">Navigation text</p>
+              </div>
+              <div class="rounded-lg border border-sidebar-border p-4">
+                <button class="ring-demo rounded-md border border-sidebar-border px-3 py-2 text-sm">
+                  sidebar-ring
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Token reference -->
+      <section class="rounded-xl border border-border bg-card p-6 text-card-foreground">
+        <h2 class="text-xl font-semibold">Token reference</h2>
+        <div class="mt-5 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+          <script>
+            const styles = getComputedStyle(document.documentElement);
+
+            const tokens = [
+              "background",
+              "foreground",
+              "card",
+              "card-foreground",
+              "popover",
+              "popover-foreground",
+              "primary",
+              "primary-foreground",
+              "secondary",
+              "secondary-foreground",
+              "muted",
+              "muted-foreground",
+              "accent",
+              "accent-foreground",
+              "destructive",
+              "destructive-foreground",
+              "border",
+              "input",
+              "ring",
+              "chart-1",
+              "chart-2",
+              "chart-3",
+              "chart-4",
+              "chart-5",
+              "sidebar",
+              "sidebar-foreground",
+              "sidebar-primary",
+              "sidebar-primary-foreground",
+              "sidebar-accent",
+              "sidebar-accent-foreground",
+              "sidebar-border",
+              "sidebar-ring"
+            ];
+
+            document.write(tokens.map((token) => {
+              const value = styles.getPropertyValue(`--${token}`).trim();
+
+              return `
+      <div class="flex items-center gap-3 rounded-lg border border-border p-3">
+        <span
+          class="h-8 w-8 shrink-0 rounded-md border border-border"
+          style="background:${value}"
+        ></span>
+
+        <div class="min-w-0">
+          <p class="truncate text-sm font-medium">${token}</p>
+          <p class="text-xs text-muted-foreground">${value}</p>
+        </div>
+      </div>
+    `;
+            }).join(""));
+          </script>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</body>
+
+</html>
