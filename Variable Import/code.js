@@ -3,14 +3,17 @@
 // ==============================================
 
 const colors = {
+  primary: '#E50914', // fixed
+  secondary: '#FFD700', // fixed
+  destructive: '#F43F5E', // fixed
+
   black: '#141414',
   white: '#FFFFFF',
-  primary: '#E50914',
-  secondary: '#FFD700',
   gray: '#2F2F2F',
   muted: '#808080',
 };
 
+// Shadcn inspired
 const baseColors = {
   background: colors.black, 
   foreground: colors.white,
@@ -21,39 +24,39 @@ const baseColors = {
   popover: colors.gray,
   popoverForeground: colors.white,
 
-  primary: colors.primary,
+  primary: colors.primary, // fixed
   primaryForeground: colors.white,
 
-  secondary: colors.secondary,
+  secondary: colors.secondary, // fixed
   secondaryForeground: colors.black,
 
   muted: colors.gray,
   mutedForeground: colors.muted,
 
-  accent: colors.secondary,
+  accent: colors.secondary, // fixed
   accentForeground: colors.black,
 
-  destructive: colors.primary,
+  destructive: colors.primary, // fixed
   destructiveForeground: colors.white,
 
   border: colors.gray,
   input: colors.gray,
-  ring: colors.primary,
+  ring: colors.primary, // fixed
 
-  chart1: colors.primary,
-  chart2: colors.secondary,
+  chart1: colors.primary, // fixed
+  chart2: colors.secondary, // fixed
   chart3: colors.muted,
   chart4: colors.white,
   chart5: colors.gray,
 
   sidebar: colors.black,
   sidebarForeground: colors.white,
-  sidebarPrimary: colors.primary,
+  sidebarPrimary: colors.primary, // fixed
   sidebarPrimaryForeground: colors.white,
-  sidebarAccent: colors.secondary,
+  sidebarAccent: colors.secondary, // fixed
   sidebarAccentForeground: colors.black,
   sidebarBorder: colors.gray,
-  sidebarRing: colors.primary,
+  sidebarRing: colors.primary, // fixed
 };
 
 // If the user has installed the font, it will appear as part of the options in Figma.
