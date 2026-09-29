@@ -3,41 +3,51 @@
 // ==============================================
 
 const colors = {
-  primary: '#E50914', // fixed
-  secondary: '#FFD700', // fixed
-  destructive: '#F43F5E', // fixed
+  black: '#0F172A',
+  blackLight: '#0B1120',
 
-  black: '#141414',
-  white: '#FFFFFF',
-  gray: '#2F2F2F',
-  muted: '#808080',
+  white: '#F8FAFC',
+  whiteDark: '#E2E8F0',
+
+  gray: '#334155',
+  grayDark: '#1E293B',
+  grayLight: '#64748B',
+
+  primary: '#6366F1',
+  secondary: '#22D3EE',
+  tertiary: '#A78BFA',
+
+  destructive: '#F43F5E',
+  success: '#22C55E',
+  warning: '#F59E0B',
+  info: '#38BDF8',
 };
 
-// Shadcn inspired
+// Shadcn inspired - dark mode
 const baseColors = {
-  background: colors.black, 
+  background: colors.black,
   foreground: colors.white,
 
-  card: colors.gray,
+  card: colors.grayDark,
   cardForeground: colors.white,
 
-  popover: colors.gray,
+  popover: colors.grayDark,
   popoverForeground: colors.white,
 
   primary: colors.primary, // fixed
-  primaryForeground: colors.white,
+  primaryForeground: colors.white, // fixed
 
   secondary: colors.secondary, // fixed
-  secondaryForeground: colors.black,
+  secondaryForeground: colors.black, // fixed
 
   muted: colors.gray,
-  mutedForeground: colors.muted,
+  mutedForeground: colors.grayLight,
 
   accent: colors.secondary, // fixed
-  accentForeground: colors.black,
+  accentForeground: colors.black, // fixed
 
-  destructive: colors.primary, // fixed
-  destructiveForeground: colors.white,
+  destructive: colors.destructive, // fixed
+  destructiveForeground: colors.white, // fixed
 
   border: colors.gray,
   input: colors.gray,
@@ -45,21 +55,72 @@ const baseColors = {
 
   chart1: colors.primary, // fixed
   chart2: colors.secondary, // fixed
-  chart3: colors.muted,
-  chart4: colors.white,
-  chart5: colors.gray,
+  chart3: colors.tertiary, // fixed
+  chart4: colors.info, // fixed
+  chart5: colors.success, // fixed
 
-  sidebar: colors.black,
+  sidebar: colors.blackLight,
   sidebarForeground: colors.white,
+
   sidebarPrimary: colors.primary, // fixed
-  sidebarPrimaryForeground: colors.white,
+  sidebarPrimaryForeground: colors.white, // fixed
+
   sidebarAccent: colors.secondary, // fixed
-  sidebarAccentForeground: colors.black,
-  sidebarBorder: colors.gray,
+  sidebarAccentForeground: colors.black, // fixed
+
+  sidebarBorder: colors.grayDark,
   sidebarRing: colors.primary, // fixed
 };
 
-// If the user has installed the font, it will appear as part of the options in Figma.
+// Shadcn inspired - light mode
+// const baseColors = {
+//   background: colors.whiteDark,
+//   foreground: colors.black,
+
+//   card: colors.white,
+//   cardForeground: colors.black,
+
+//   popover: colors.white,
+//   popoverForeground: colors.black,
+
+//   primary: colors.primary, // fixed
+//   primaryForeground: colors.white, // fixed
+
+//   secondary: colors.secondary, // fixed
+//   secondaryForeground: colors.black, // fixed
+
+//   muted: colors.grayLight,
+//   mutedForeground: colors.gray,
+
+//   accent: colors.secondary, // fixed
+//   accentForeground: colors.black, // fixed
+
+//   destructive: colors.destructive, // fixed
+//   destructiveForeground: colors.white, // fixed
+
+//   border: colors.grayLight,
+//   input: colors.grayLight,
+//   ring: colors.primary, // fixed
+
+//   chart1: colors.primary, // fixed
+//   chart2: colors.secondary, // fixed
+//   chart3: colors.tertiary, // fixed
+//   chart4: colors.info, // fixed
+//   chart5: colors.success, // fixed
+
+//   sidebar: colors.white,
+//   sidebarForeground: colors.black,
+
+//   sidebarPrimary: colors.primary, // fixed
+//   sidebarPrimaryForeground: colors.white, // fixed
+
+//   sidebarAccent: colors.secondary, // fixed
+//   sidebarAccentForeground: colors.black, // fixed
+
+//   sidebarBorder: colors.grayLight,
+//   sidebarRing: colors.primary, // fixed
+// };
+
 const fontFamily = 'Inter';
 const fontSizes = {
   x1: 4,

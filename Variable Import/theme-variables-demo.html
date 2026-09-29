@@ -7,6 +7,92 @@
   <title>Shadcn Theme Variables Demo</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
+    function setCssVariables(variables) {
+      const root = document.documentElement;
+
+      for (const [key, value] of Object.entries(variables)) {
+        const cssVariable = `--${key
+          .replace(/([a-z])([A-Z])/g, "$1-$2")
+          .replace(/([a-zA-Z])(\d+)/g, "$1-$2")
+          .toLowerCase()}`;
+
+        root.style.setProperty(cssVariable, value);
+      }
+    }
+
+    const colors = {
+      black: '#0F172A',
+      blackLight: '#0B1120',
+
+      white: '#F8FAFC',
+      whiteDark: '#E2E8F0',
+
+      gray: '#334155',
+      grayDark: '#1E293B',
+      grayLight: '#64748B',
+
+      primary: '#6366F1',
+      secondary: '#22D3EE',
+      tertiary: '#A78BFA',
+
+      destructive: '#F43F5E',
+      success: '#22C55E',
+      warning: '#F59E0B',
+      info: '#38BDF8',
+    };
+
+    // Shadcn inspired - light mode
+    const baseColors = {
+      background: colors.whiteDark,
+      foreground: colors.black,
+
+      card: colors.white,
+      cardForeground: colors.black,
+
+      popover: colors.white,
+      popoverForeground: colors.black,
+
+      primary: colors.primary, // fixed
+      primaryForeground: colors.white, // fixed
+
+      secondary: colors.secondary, // fixed
+      secondaryForeground: colors.black, // fixed
+
+      muted: colors.grayLight,
+      mutedForeground: colors.gray,
+
+      accent: colors.secondary, // fixed
+      accentForeground: colors.black, // fixed
+
+      destructive: colors.destructive, // fixed
+      destructiveForeground: colors.white, // fixed
+
+      border: colors.grayLight,
+      input: colors.grayLight,
+      ring: colors.primary, // fixed
+
+      chart1: colors.primary, // fixed
+      chart2: colors.secondary, // fixed
+      chart3: colors.tertiary, // fixed
+      chart4: colors.info, // fixed
+      chart5: colors.success, // fixed
+
+      sidebar: colors.white,
+      sidebarForeground: colors.black,
+
+      sidebarPrimary: colors.primary, // fixed
+      sidebarPrimaryForeground: colors.white, // fixed
+
+      sidebarAccent: colors.secondary, // fixed
+      sidebarAccentForeground: colors.black, // fixed
+
+      sidebarBorder: colors.grayLight,
+      sidebarRing: colors.primary, // fixed
+    };
+
+    setCssVariables(baseColors);
+  </script>
+  <script>
     tailwind.config = {
       theme: {
         extend: {
@@ -49,86 +135,6 @@
     };
   </script>
   <style>
-    /* :root {
-      --background: #141414;
-      --foreground: #ffffff;
-      --card: #2f2f2f;
-      --card-foreground: #ffffff;
-      --popover: #2f2f2f;
-      --popover-foreground: #ffffff;
-      --primary: #e50914;
-      --primary-foreground: #ffffff;
-      --secondary: #ffd700;
-      --secondary-foreground: #141414;
-      --muted: #2f2f2f;
-      --muted-foreground: #808080;
-      --accent: #ffd700;
-      --accent-foreground: #141414;
-      --destructive: #e50914;
-      --destructive-foreground: #ffffff;
-      --border: #2f2f2f;
-      --input: #2f2f2f;
-      --ring: #e50914;
-      --chart-1: #e50914;
-      --chart-2: #ffd700;
-      --chart-3: #808080;
-      --chart-4: #ffffff;
-      --chart-5: #2f2f2f;
-      --sidebar: #141414;
-      --sidebar-foreground: #ffffff;
-      --sidebar-primary: #e50914;
-      --sidebar-primary-foreground: #ffffff;
-      --sidebar-accent: #ffd700;
-      --sidebar-accent-foreground: #141414;
-      --sidebar-border: #2f2f2f;
-      --sidebar-ring: #e50914;
-    } */
-
-    :root {
-      --background: #0F172A;
-      --foreground: #F8FAFC;
-
-      --card: #1E293B;
-      --card-foreground: #F8FAFC;
-
-      --popover: #1E293B;
-      --popover-foreground: #F8FAFC;
-
-      --primary: #6366F1;
-      --primary-foreground: #FFFFFF;
-
-      --secondary: #22D3EE;
-      --secondary-foreground: #0F172A;
-
-      --muted: #334155;
-      --muted-foreground: #94A3B8;
-
-      --accent: #22D3EE;
-      --accent-foreground: #0F172A;
-
-      --destructive: #F43F5E;
-      --destructive-foreground: #FFFFFF;
-
-      --border: #334155;
-      --input: #334155;
-      --ring: #6366F1;
-
-      --chart-1: #6366F1;
-      --chart-2: #22D3EE;
-      --chart-3: #A78BFA;
-      --chart-4: #F8FAFC;
-      --chart-5: #64748B;
-
-      --sidebar: #0B1120;
-      --sidebar-foreground: #F8FAFC;
-      --sidebar-primary: #6366F1;
-      --sidebar-primary-foreground: #FFFFFF;
-      --sidebar-accent: #22D3EE;
-      --sidebar-accent-foreground: #0F172A;
-      --sidebar-border: #1E293B;
-      --sidebar-ring: #6366F1;
-    }
-
     * {
       box-sizing: border-box;
     }
@@ -164,6 +170,7 @@
       border-radius: 4px 4px 0 0;
     }
   </style>
+
 </head>
 
 <body>
