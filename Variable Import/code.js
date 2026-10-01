@@ -38,13 +38,13 @@ const baseColors = {
   primaryForeground: colors.white, // fixed
 
   secondary: colors.secondary, // fixed
-  secondaryForeground: colors.black, // fixed
+  secondaryForeground: colors.black,
 
   muted: colors.gray,
   mutedForeground: colors.grayLight,
 
   accent: colors.secondary, // fixed
-  accentForeground: colors.black, // fixed
+  accentForeground: colors.black,
 
   destructive: colors.destructive, // fixed
   destructiveForeground: colors.white, // fixed
@@ -63,10 +63,10 @@ const baseColors = {
   sidebarForeground: colors.white,
 
   sidebarPrimary: colors.primary, // fixed
-  sidebarPrimaryForeground: colors.white, // fixed
+  sidebarPrimaryForeground: colors.white,
 
   sidebarAccent: colors.secondary, // fixed
-  sidebarAccentForeground: colors.black, // fixed
+  sidebarAccentForeground: colors.black,
 
   sidebarBorder: colors.grayDark,
   sidebarRing: colors.primary, // fixed
