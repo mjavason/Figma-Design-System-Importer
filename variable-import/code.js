@@ -3,19 +3,11 @@
 // ==============================================
 
 const baseColors = {
-  black: '#21243d',
-  blackLight: '#0B1120',
-
-  white: '#ffffff',
-  whiteDark: '#E2E8F0',
-
-  gray: '#334155',
-  grayDark: '#1E293B',
-  grayLight: '#edf7fa',
-
-  primary: '#ff6464',
-  secondary: '#00A8CC',
-  tertiary: '#ff7c7c',
+  primary: '#173B45',
+  secondary: '#2F6F6D',
+  accent: '#C47A45',
+  background: '#F8FAFC',
+  neutral: '#687780',
 
   destructive: '#F43F5E',
   success: '#22C55E',
