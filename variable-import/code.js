@@ -248,9 +248,25 @@ function createNumberVariables(collection, namespace, values, variableMap) {
 
   const variableMap = {};
 
+  // Generate shades before creating color variables
+  const colorShades = Object.fromEntries(
+    Object.entries(baseColors).map(([name, hex]) => [
+      name,
+      generateShades(hex),
+    ]),
+  );
+
   // Color Collection
   const colorCollection = createVariableCollection('Colors');
-  createColorVariables(colorCollection, 'colors', baseColors, variableMap);
+
+  for (const [colorName, shades] of Object.entries(colorShades)) {
+    createColorVariables(
+      colorCollection,
+      `colors/${colorName}`,
+      shades,
+      variableMap,
+    );
+  }
 
   // Typography Collection
   const fontCollection = createVariableCollection('Typography');
