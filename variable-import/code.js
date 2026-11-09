@@ -2,124 +2,26 @@
 // Editable Configuration
 // ==============================================
 
-const colors = {
-  black: '#0F172A',
+const baseColors = {
+  black: '#21243d',
   blackLight: '#0B1120',
 
-  white: '#F8FAFC',
+  white: '#ffffff',
   whiteDark: '#E2E8F0',
 
   gray: '#334155',
   grayDark: '#1E293B',
-  grayLight: '#64748B',
+  grayLight: '#edf7fa',
 
-  primary: '#6366F1',
-  secondary: '#22D3EE',
-  tertiary: '#A78BFA',
+  primary: '#ff6464',
+  secondary: '#00A8CC',
+  tertiary: '#ff7c7c',
 
   destructive: '#F43F5E',
   success: '#22C55E',
   warning: '#F59E0B',
   info: '#38BDF8',
 };
-
-// Shadcn inspired - dark mode
-const baseColors = {
-  background: colors.black,
-  foreground: colors.white,
-
-  card: colors.grayDark,
-  cardForeground: colors.white,
-
-  popover: colors.grayDark,
-  popoverForeground: colors.white,
-
-  primary: colors.primary, // fixed
-  primaryForeground: colors.white, // fixed
-
-  secondary: colors.secondary, // fixed
-  secondaryForeground: colors.black,
-
-  muted: colors.gray,
-  mutedForeground: colors.grayLight,
-
-  accent: colors.secondary, // fixed
-  accentForeground: colors.black,
-
-  destructive: colors.destructive, // fixed
-  destructiveForeground: colors.white, // fixed
-
-  border: colors.gray,
-  input: colors.gray,
-  ring: colors.primary, // fixed
-
-  chart1: colors.primary, // fixed
-  chart2: colors.secondary, // fixed
-  chart3: colors.tertiary, // fixed
-  chart4: colors.info, // fixed
-  chart5: colors.success, // fixed
-
-  sidebar: colors.blackLight,
-  sidebarForeground: colors.white,
-
-  sidebarPrimary: colors.primary, // fixed
-  sidebarPrimaryForeground: colors.white,
-
-  sidebarAccent: colors.secondary, // fixed
-  sidebarAccentForeground: colors.black,
-
-  sidebarBorder: colors.grayDark,
-  sidebarRing: colors.primary, // fixed
-};
-
-// Shadcn inspired - light mode
-// const baseColors = {
-//   background: colors.whiteDark,
-//   foreground: colors.black,
-
-//   card: colors.white,
-//   cardForeground: colors.black,
-
-//   popover: colors.white,
-//   popoverForeground: colors.black,
-
-//   primary: colors.primary, // fixed
-//   primaryForeground: colors.white, // fixed
-
-//   secondary: colors.secondary, // fixed
-//   secondaryForeground: colors.black, // fixed
-
-//   muted: colors.grayLight,
-//   mutedForeground: colors.gray,
-
-//   accent: colors.secondary, // fixed
-//   accentForeground: colors.black, // fixed
-
-//   destructive: colors.destructive, // fixed
-//   destructiveForeground: colors.white, // fixed
-
-//   border: colors.grayLight,
-//   input: colors.grayLight,
-//   ring: colors.primary, // fixed
-
-//   chart1: colors.primary, // fixed
-//   chart2: colors.secondary, // fixed
-//   chart3: colors.tertiary, // fixed
-//   chart4: colors.info, // fixed
-//   chart5: colors.success, // fixed
-
-//   sidebar: colors.white,
-//   sidebarForeground: colors.black,
-
-//   sidebarPrimary: colors.primary, // fixed
-//   sidebarPrimaryForeground: colors.white, // fixed
-
-//   sidebarAccent: colors.secondary, // fixed
-//   sidebarAccentForeground: colors.black, // fixed
-
-//   sidebarBorder: colors.grayLight,
-//   sidebarRing: colors.primary, // fixed
-// };
 
 const fontFamily = 'Inter';
 const fontSizes = {
