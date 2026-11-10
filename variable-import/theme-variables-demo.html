@@ -17,11 +17,12 @@
     }
 
     const colors = {
-      primary: "#173B45",
-      secondary: "#2F6F6D",
-      accent: "#C47A45",
-      background: "#F8FAFC",
+      primary: "#2457C5",
+      secondary: "#7892B8",
+      accent: "#DF765E",
+      background: "#F5F7FA",
       neutral: "#687780",
+      text: "#171B22"
     };
 
     setCssVariables(colors);
@@ -37,6 +38,7 @@
             accent: "var(--accent)",
             background: "var(--background)",
             neutral: "var(--neutral)",
+            text: "var(--text)",
           }
         }
       }
@@ -86,9 +88,9 @@
 
     <header class="border-b border-neutral/30 bg-background px-6 py-5">
       <div class="mx-auto max-w-7xl">
-        <p class="text-sm font-medium text-neutral">THEME TOKENS</p>
+        <p class="text-sm font-medium text-text">THEME TOKENS</p>
         <h1 class="mt-1 text-3xl font-bold">Theme Variables Demo</h1>
-        <p class="mt-2 max-w-3xl text-neutral">
+        <p class="mt-2 max-w-3xl text-text">
           A minimal theme system powered by five color variables.
         </p>
       </div>
@@ -100,7 +102,7 @@
       <section class="space-y-4">
         <div>
           <h2 class="text-xl font-semibold">Core colors</h2>
-          <p class="text-sm text-neutral">
+          <p class="text-sm text-text">
             Five variables control the entire interface.
           </p>
         </div>
@@ -123,7 +125,7 @@
           </div>
 
           <div class="rounded-xl border border-neutral/30 bg-background p-5 text-primary">
-            <p class="text-sm text-neutral">Background</p>
+            <p class="text-sm text-text">Background</p>
             <h3 class="mt-1 text-lg font-semibold">#F8FAFC</h3>
           </div>
 
@@ -173,21 +175,20 @@
             <div>
               <label class="mb-2 block text-sm font-medium">Input</label>
               <input
-                class="ring-demo w-full rounded-lg border border-neutral/40 bg-background px-3 py-2 text-primary placeholder:text-neutral"
+                class="ring-demo w-full rounded-lg border border-neutral/40 bg-background px-3 py-2 text-primary placeholder:text-text"
                 placeholder="Enter something..." />
             </div>
 
             <div>
               <label class="mb-2 block text-sm font-medium">Textarea</label>
               <textarea
-                class="ring-demo min-h-24 w-full rounded-lg border border-neutral/40 bg-background px-3 py-2 text-primary placeholder:text-neutral"
+                class="ring-demo min-h-24 w-full rounded-lg border border-neutral/40 bg-background px-3 py-2 text-primary placeholder:text-text"
                 placeholder="Write a message..."></textarea>
             </div>
 
             <div>
               <label class="mb-2 block text-sm font-medium">Select</label>
-              <select
-                class="ring-demo w-full rounded-lg border border-neutral/40 bg-background px-3 py-2 text-primary">
+              <select class="ring-demo w-full rounded-lg border border-neutral/40 bg-background px-3 py-2 text-primary">
                 <option>Option one</option>
                 <option>Option two</option>
                 <option>Option three</option>
@@ -236,7 +237,7 @@
 
         <div>
           <h2 class="text-xl font-semibold">Charts</h2>
-          <p class="text-sm text-neutral">
+          <p class="text-sm text-text">
             Chart colors reuse the five available theme variables.
           </p>
         </div>
@@ -301,23 +302,19 @@
 
             <nav class="space-y-1">
 
-              <a href="#"
-                class="block rounded-lg bg-primary px-3 py-2 font-medium text-background">
+              <a href="#" class="block rounded-lg bg-primary px-3 py-2 font-medium text-background">
                 Dashboard
               </a>
 
-              <a href="#"
-                class="block rounded-lg px-3 py-2 hover:bg-accent hover:text-background">
+              <a href="#" class="block rounded-lg px-3 py-2 hover:bg-accent hover:text-background">
                 Analytics
               </a>
 
-              <a href="#"
-                class="block rounded-lg px-3 py-2 hover:bg-accent hover:text-background">
+              <a href="#" class="block rounded-lg px-3 py-2 hover:bg-accent hover:text-background">
                 Users
               </a>
 
-              <a href="#"
-                class="block rounded-lg px-3 py-2 hover:bg-accent hover:text-background">
+              <a href="#" class="block rounded-lg px-3 py-2 hover:bg-accent hover:text-background">
                 Settings
               </a>
 
@@ -335,14 +332,14 @@
 
             <h2 class="text-xl font-semibold">Navigation demonstration</h2>
 
-            <p class="mt-2 text-neutral">
+            <p class="mt-2 text-text">
               The navigation uses primary, accent, background and neutral.
             </p>
 
             <div class="mt-6 grid gap-4 sm:grid-cols-2">
 
               <div class="rounded-lg border border-neutral/30 bg-background p-4">
-                <p class="text-sm text-neutral">Background</p>
+                <p class="text-sm text-text">Background</p>
                 <p class="mt-1 font-semibold">#F8FAFC</p>
               </div>
 
@@ -403,7 +400,7 @@
 
           <div class="min-w-0">
             <p class="truncate text-sm font-medium">${token}</p>
-            <p class="text-xs text-neutral">${value}</p>
+            <p class="text-xs text-text">${value}</p>
           </div>
         </div>
       `;
@@ -411,4 +408,5 @@
   </script>
 
 </body>
+
 </html>
