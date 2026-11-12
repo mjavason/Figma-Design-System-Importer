@@ -3,11 +3,12 @@
 // ==============================================
 
 const baseColors = {
-  primary: '#173B45',
-  secondary: '#2F6F6D',
-  accent: '#C47A45',
-  background: '#F8FAFC',
-  neutral: '#687780',
+  primary: '#2457C5',
+  secondary: '#7892B8',
+  accent: '#DF765E',
+  background: '#F5F7FA',
+  neutral: '#ebeef7',
+  text: '#171B22',
 
   destructive: '#F43F5E',
   success: '#22C55E',
@@ -15,7 +16,6 @@ const baseColors = {
   info: '#38BDF8',
 };
 
-const fontFamily = 'Inter';
 const fontSizes = {
   x1: 4,
   x2: 8,
