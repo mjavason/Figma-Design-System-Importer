@@ -7,7 +7,6 @@ const baseColors = {
   secondary: '#7892B8',
   accent: '#DF765E',
   background: '#F5F7FA',
-  neutral: '#ebeef7',
   text: '#171B22',
 
   destructive: '#F43F5E',
