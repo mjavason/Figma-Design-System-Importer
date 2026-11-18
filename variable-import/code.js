@@ -118,16 +118,6 @@ const fontSizes = {
   x100: 400,
 };
 
-const letterSpacing = {
-  base: 0,
-  tiny: -0.25,
-  small: -0.5,
-  large: -1,
-  xLarge: -1.25,
-  xxLarge: -1.5,
-  xxxLarge: -2,
-};
-
 // ==============================================
 // Utility Functions
 // ==============================================
@@ -270,12 +260,6 @@ function createNumberVariables(collection, namespace, values, variableMap) {
   // Typography Collection
   const fontCollection = createVariableCollection('Typography');
   createNumberVariables(fontCollection, 'fontSize', fontSizes, variableMap);
-  createNumberVariables(
-    fontCollection,
-    'letterSpacing',
-    letterSpacing,
-    variableMap,
-  );
 
   figma.closePlugin('Variables created.');
 })();
